@@ -18,6 +18,7 @@ const CalculPage = () => {
 { origin: 'Rotterdam', destination: 'Algier', carrier: 'MSC', oceanFreight: 1650 },
 { origin: 'Hamburg', destination: 'Algier', carrier: 'MSC', oceanFreight: 1650 },
 { origin: 'Antwerp', destination: 'Annaba', carrier: 'MSC', oceanFreight: 1650 },
+{ origin: 'Antwerp', destination: 'Annaba', carrier: 'MC', oceanFreight: 1550 },//test
 { origin: 'Rotterdam', destination: 'Annaba', carrier: 'MSC', oceanFreight: 1650 },
 { origin: 'Hamburg', destination: 'Annaba', carrier: 'MSC', oceanFreight: 1650 },
 { origin: 'Antwerp', destination: 'Skikda', carrier: 'MSC', oceanFreight: 1650 },
@@ -113,14 +114,19 @@ const CalculPage = () => {
 
   ];
 
-  // Tarifs fixes pour les autres services
-  const fixedRates = {
+  const fixedRatesAntwerp = {
     thcOrigin: 200.00,
     containerPreCollection: 255.00,
     dischCost: 118.75,
     stowage: 118.75,
-    tonWeight: 25
+    tonWeight: 25 ////
   };
+
+  const fixedRatesHamburg = {
+  thcOrigin: 250.00,
+  stowage: 650.00,
+  tonWeight: 25 ////
+};
 
   // Extraire les valeurs uniques
   const origins = [...new Set(freightData.map(item => item.origin))];
@@ -146,39 +152,47 @@ const CalculPage = () => {
     setShowCalculations(true);
   };
 
-  const calculateTotal = (oceanFreight) => {
-    const thcOrigin = fixedRates.thcOrigin;
-    const containerPreCollection = fixedRates.containerPreCollection;
-    const dischCost = fixedRates.dischCost;
-    const stowage = fixedRates.stowage;
-    
-    const allInByContainer = oceanFreight + thcOrigin + containerPreCollection + dischCost + stowage;
-    const allInByTon = allInByContainer / fixedRates.tonWeight;
-    
-    return {
-      oceanFreight,
-      thcOrigin,
-      containerPreCollection,
-      dischCost,
-      stowage,
-      allInByContainer,
-      allInByTon
-    };
+ const calculateTotal = (oceanFreight, origin) => {
+  const isHamburg = origin === 'Hamburg';
+
+  const thcOrigin = isHamburg ? fixedRatesHamburg.thcOrigin : fixedRatesAntwerp.thcOrigin;
+  const stowage = isHamburg ? fixedRatesHamburg.stowage : fixedRatesAntwerp.stowage;
+  const containerPreCollection = isHamburg ? 0 : fixedRatesAntwerp.containerPreCollection;
+  const dischCost = isHamburg ? 0 : fixedRatesAntwerp.dischCost;
+  const tonWeight = isHamburg ? fixedRatesHamburg.tonWeight : fixedRatesAntwerp.tonWeight;
+
+  const allInByContainer = isHamburg
+    ? oceanFreight + thcOrigin + stowage
+    : oceanFreight + thcOrigin + containerPreCollection + dischCost + stowage;
+
+  const allInByTon = allInByContainer / tonWeight;
+
+  return {
+    oceanFreight,
+    thcOrigin,
+    containerPreCollection: isHamburg ? null : containerPreCollection,
+    dischCost: isHamburg ? null : dischCost,
+    stowage,
+    allInByContainer,
+    allInByTon
   };
+};
+
 
   const isFormValid = () => {
     return formData.origin && formData.destination;
   };
 
   const CarrierProposal = ({ route, index }) => {
-    const calculation = calculateTotal(route.oceanFreight);
+    const calculation = calculateTotal(route.oceanFreight, route.origin);
     
     return (
       <div className="proposal-card">
         <div className="proposal-header">
           <h3 className="proposal-title">
             <Ship className="title-icon" />
-            Proposition {index + 1} - {route.carrier}
+            {/* Proposition {index + 1} - {route.carrier} */}
+            Proposition {index + 1}
           </h3>
           <div className="carrier-badge">
             {route.carrier}
@@ -187,53 +201,57 @@ const CalculPage = () => {
 
         {/* Tableau de calcul */}
         <div className="calculation-table">
-          <table className="w-full">
-             <tbody>
-               <tr>
-                 <td className="table-label">Ocean freight</td>
-                 <td className="table-value">
-                  {calculation.oceanFreight.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
-                 </td>
-                </tr>
-              <tr>
-                  <td className="table-label">THC Origin</td>
-                  <td className="table-value">
-                   € {calculation.thcOrigin.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                </td>
-              </tr>
+        <table className="w-full">
+          <tbody>
+            <tr>
+              <td className="table-label">Ocean freight</td>
+              <td className="table-value">
+                {calculation.oceanFreight.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
+              </td>
+            </tr>
+            <tr>
+              <td className="table-label">THC Origin</td>
+              <td className="table-value">
+                {calculation.thcOrigin.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
+              </td>
+            </tr>
+            {calculation.containerPreCollection !== null && (
               <tr>
                 <td className="table-label">Container Pre-collection</td>
                 <td className="table-value">
-                  € {calculation.containerPreCollection.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  {calculation.containerPreCollection.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
                 </td>
               </tr>
+            )}
+            {calculation.dischCost !== null && (
               <tr>
                 <td className="table-label">Disch. Cost</td>
                 <td className="table-value">
                   {calculation.dischCost.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
                 </td>
               </tr>
-              <tr>
-                  <td className="table-label">Stowage</td>
-                  <td className="table-value">
-                  {calculation.stowage.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
-                  </td>
-                </tr>
-              <tr className="table-total-container">
-                <td className="table-total-label">ALL IN BY CONTAINER</td>
-                <td className="table-total-value">
-                  {calculation.allInByContainer.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
-                </td>
-              </tr>
-              <tr className="table-ton-container">
-                <td className="table-ton-label">ALL IN BY TON</td>
-                <td className="table-ton-value">
-                  € {calculation.allInByTon.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+            )}
+            <tr>
+              <td className="table-label">Stowage</td>
+              <td className="table-value">
+                {calculation.stowage.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
+              </td>
+            </tr>
+            <tr className="table-total-container">
+              <td className="table-total-label">ALL IN BY CONTAINER</td>
+              <td className="table-total-value">
+                {calculation.allInByContainer.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
+              </td>
+            </tr>
+            <tr className="table-ton-container">
+              <td className="table-ton-label">ALL IN BY TON</td>
+              <td className="table-ton-value">
+                {calculation.allInByTon.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
 
         {/* Prix total en évidence */}
@@ -253,35 +271,38 @@ const CalculPage = () => {
   };
 
   // Trouver la meilleure offre
-  const bestOffer = availableRoutes.length > 0 ? 
-    availableRoutes.reduce((best, current) => 
-      calculateTotal(current.oceanFreight).allInByContainer < calculateTotal(best.oceanFreight).allInByContainer ? current : best
-    ) : null;
+  const bestOffer = availableRoutes.length > 0
+  ? availableRoutes.reduce((best, current) => {
+      const currentCalc = calculateTotal(current.oceanFreight, current.origin);
+      const bestCalc = calculateTotal(best.oceanFreight, best.origin);
+      return currentCalc.allInByContainer < bestCalc.allInByContainer ? current : best;
+    })
+  : null;
 
   return (
     <div className="main-container">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="header mb-8">
-  <div className="header-title">
-    <Ship className="ship-icon" />
-    <h1>Calculateur de Fret Maritime</h1>
-  </div>
-  <p className="header-subtitle">Comparez les offres de plusieurs transporteurs</p>
-</div>
-
+          <div className="header-title">
+            <Ship className="ship-icon" />
+            <h1>Calculateur de Fret Maritime</h1>
+          </div>
+        <p className="header-subtitle">Comparez les offres de plusieurs transporteurs</p>
+        </div>
         {/* Formulaire de recherche */}
         <div className="form-section">
-          <h2 className="section-title">
-            <Calculator className="h-6 w-6 mr-2 text-blue-600" />
+          <h2 className="proposal-title">
+            <Calculator className="card-title-icon" />
             Rechercher des offres
           </h2>
 
+          {/* <div className="grid-custom"> */}
           <div className="grid md:grid-cols-3 gap-6">
             {/* Origine */}
             <div>
               <label className="form-label">
-                <MapPin className="inline h-4 w-4 mr-1" />
+                <MapPin className="mappin-icon" />
                 Port d'origine
               </label>
               <select 
@@ -358,7 +379,7 @@ const CalculPage = () => {
                       <div className="text-right">
                         <p className="text-sm text-green-600">Meilleure offre</p>
                         <p className="text-2xl font-bold text-green-700">
-                          {calculateTotal(bestOffer.oceanFreight).allInByContainer.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
+                          {calculateTotal(bestOffer.oceanFreight, bestOffer.origin).allInByContainer.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
                         </p>
                         <p className="text-sm text-green-600">{bestOffer.carrier}</p>
                       </div>
@@ -369,7 +390,7 @@ const CalculPage = () => {
                 {/* Propositions */}
                 <div className="grid gap-6">
                   {availableRoutes
-                    .sort((a, b) => calculateTotal(a.oceanFreight).allInByContainer - calculateTotal(b.oceanFreight).allInByContainer)
+                    .sort((a, b) => calculateTotal(a).allInByContainer - calculateTotal(b).allInByContainer)
                     .map((route, index) => (
                       <CarrierProposal key={`${route.carrier}-${index}`} route={route} index={index} />
                     ))
