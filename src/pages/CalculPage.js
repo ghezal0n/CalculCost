@@ -110,7 +110,7 @@ const CalculPage = () => {
 { origin: 'Antwerp', destination: 'Tanger', carrier: 'CMA CGM', oceanFreight: 900 },
 { origin: 'Rotterdam', destination: 'Tanger', carrier: 'CMA CGM', oceanFreight: 900 },
 { origin: 'Hamburg', destination: 'Tanger', carrier: 'CMA CGM', oceanFreight: 900 },
-{ origin: 'Hamburg', destination: 'Tanger', carrier: 'MSC', oceanFreight: 800 }
+{ origin: 'Hamburg', destination: 'Tanger', carrier: 'MSC', oceanFreight: 800 }//test
 
   ];
 
@@ -119,13 +119,13 @@ const CalculPage = () => {
     containerPreCollection: 255.00,
     dischCost: 118.75,
     stowage: 118.75,
-    tonWeight: 25 ////
+    tonWeight: 24 ////
   };
 
   const fixedRatesHamburg = {
   thcOrigin: 250.00,
   stowage: 650.00,
-  tonWeight: 25 ////
+  tonWeight: 24 ////
 };
 
   // Extraire les valeurs uniques
@@ -232,7 +232,7 @@ const CalculPage = () => {
               </tr>
             )}
             <tr>
-              <td className="table-label">Stowage</td>
+              <td className="table-label">Container stuffing + pre carriage</td>
               <td className="table-value">
                 {calculation.stowage.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
               </td>
@@ -291,7 +291,7 @@ const CalculPage = () => {
         <p className="header-subtitle">Comparez les offres de plusieurs transporteurs</p>
         </div>
         {/* Formulaire de recherche */}
-        <div className="form-section">
+        <div className="results-header">
           <h2 className="proposal-title">
             <Calculator className="card-title-icon" />
             Rechercher des offres
@@ -302,9 +302,12 @@ const CalculPage = () => {
             {/* Origine */}
             <div>
               <label className="form-label">
-                <MapPin className="mappin-icon" />
-                Port d'origine
+                <span className="label-icon-text">
+                  <MapPin className="mappin-icon" />
+                  <span>Port d'origine</span>
+                </span>
               </label>
+
               <select 
                 className="form-select"
                 value={formData.origin}
@@ -320,8 +323,10 @@ const CalculPage = () => {
             {/* Destination */}
             <div>
               <label className="form-label">
-                <MapPin className="inline h-4 w-4 mr-1" />
-                Port de destination
+                <span className="label-icon-text">
+                  <MapPin className="mappin-icon" />
+                  <span>Port de destination</span>
+                </span>
               </label>
               <select 
                 className="form-select"

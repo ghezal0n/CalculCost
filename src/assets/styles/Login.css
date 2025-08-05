@@ -10,43 +10,46 @@ body {
 
 .login-container {
   background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  padding: 40px;
-  max-width: 400px;
+  border-radius: 20px;
+  padding: 70px;
+  max-width: 500px;
   width: 100%;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
 .login-logo {
   background: linear-gradient(to right, #6366f1, #06b6d4);
-  height: 80px;
-  width: 80px;
+  height: 120px;
+  width: 120px;
   border-radius: 50%;
-  margin: 0 auto 20px;
+  margin: 0 auto 30px;
 }
 
 .login-title {
   text-align: center;
   font-weight: bold;
-  font-size: 24px;
+  font-size: 32px;
+  margin-bottom: 10px;
 }
 
 .login-subtitle {
   text-align: center;
-  font-size: 16px;
+  font-size: 18px;
   color: #333;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 .input-field {
   width: 100%;
   background: rgba(243, 244, 246, 0.5);
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 10px;
-  margin-bottom: 15px;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin-bottom: 24px;
+  font-size: 16px;
+  box-sizing: border-box;
 }
 
 .input-field.error {
@@ -63,12 +66,31 @@ body {
   box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.3);
 }
 
-.toggle-password {
-  margin-top: -10px;
-  margin-bottom: 15px;
-  font-size: 13px;
-  color: #555;
+.password-input-container {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.password-input {
+  padding-right: 55px !important;
+  margin-bottom: 0 !important;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
   cursor: pointer;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.eye-icon:hover {
+  color: #6366f1;
 }
 
 .submit-button {
@@ -76,34 +98,44 @@ body {
   background: linear-gradient(to right, #6366f1, #06b6d4);
   color: white;
   border: none;
-  border-radius: 8px;
-  padding: 12px;
+  border-radius: 10px;
+  padding: 16px;
   font-weight: bold;
+  font-size: 16px;
   cursor: pointer;
+  margin-top: 10px;
+}
+
+.submit-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  transition: all 0.2s ease;
 }
 
 .success-message {
   background: #ecfdf5;
   border: 1px solid #bbf7d0;
   color: #166534;
-  padding: 10px;
-  border-radius: 8px;
-  margin-bottom: 15px;
+  padding: 14px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-size: 15px;
 }
 
 .error-message {
   background: #fef2f2;
   border: 1px solid #fecaca;
   color: #991b1b;
-  padding: 10px;
-  border-radius: 8px;
-  margin-bottom: 15px;
+  padding: 14px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-size: 15px;
 }
 
 .login-footer {
   text-align: center;
-  margin-top: 15px;
-  font-size: 14px;
+  margin-top: 25px;
+  font-size: 16px;
 }
 
 .login-footer a {

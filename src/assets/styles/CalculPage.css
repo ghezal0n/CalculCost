@@ -113,6 +113,13 @@
     cursor: pointer;
 }
 
+.label-icon-text {
+  display: flex;
+  align-items: center;
+  gap: 1px; /* espace entre icône et texte */
+}
+
+
 .proposal-card {
     background: white;
     border-radius: 12px;
@@ -149,7 +156,7 @@
     color: #1e40af;
     padding: 4px 12px;
     border-radius: 9999px;
-    font-size: 0.875rem;
+    font-size: 1rem;
     font-weight: 600;
 }
 
@@ -281,12 +288,6 @@
     border-radius: 8px;
     padding: 16px;
     margin-bottom: 24px;
-}
-
-.route-info h3 {
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: #1e40af;
 }
 
 /* Table */

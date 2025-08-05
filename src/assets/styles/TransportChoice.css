@@ -1,0 +1,358 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 100%);
+    min-height: 100vh;
+    padding: 24px;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* Header Styles */
+.header {
+    text-align: center;
+    margin-bottom: 48px;
+}
+
+.header-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.header-title h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #1f2937;
+    margin-left: 12px;
+}
+
+.ship-icon {
+    width: 48px;
+    height: 48px;
+    color: #2563eb;
+}
+
+.header-subtitle {
+    color: #6b7280;
+    font-size: 1.25rem;
+    margin-bottom: 8px;
+}
+
+.header-description {
+    color: #6b7280;
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Choice Grid */
+.choices-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-bottom: 48px;
+}
+
+/* Choice Card Styles */
+.choice-card {
+    background: white;
+    border-radius: 12px;
+    padding: 32px 24px; 
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 1px solid transparent;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.choice-card:hover {
+    transform: none;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    border-color: #3b82f6;
+}
+
+.choice-card:active {
+    transform: translateY(-4px);
+}
+
+.choice-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.choice-card:hover::before {
+    transform: scaleX(1);
+}
+
+/* Choice Icon Styles */
+.choice-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 24px;
+    padding: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.choice-card:hover .choice-icon {
+    transform: scale(1.1);
+}
+
+/* Different colors for each choice */
+.choice-card:nth-child(1) .choice-icon {
+    background: linear-gradient(135deg, #fef3c7, #fcd34d);
+    color: #92400e;
+}
+
+.choice-card:nth-child(2) .choice-icon {
+    background: linear-gradient(135deg, #dcfce7, #86efac);
+    color: #166534;
+}
+
+.choice-card:nth-child(3) .choice-icon {
+    background: linear-gradient(135deg, #dbeafe, #93c5fd);
+    color: #1e40af;
+}
+
+.choice-card:nth-child(4) .choice-icon {
+    background: linear-gradient(135deg, #f3e8ff, #c084fc);
+    color: #7c3aed;
+}
+
+.choice-icon svg {
+    width: 32px;
+    height: 32px;
+}
+
+/* Choice Content */
+.choice-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 12px;
+}
+
+.choice-description {
+    color: #6b7280;
+    font-size: 1rem;
+    margin-bottom: 16px;
+    line-height: 1.6;
+}
+
+.choice-features {
+    list-style: none;
+    text-align: left;
+}
+
+.choice-features li {
+    color: #4b5563;
+    font-size: 1rem;
+    margin-bottom: 8px;
+    padding-left: 20px;
+    position: relative;
+}
+
+.choice-features li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #10b981;
+    font-weight: bold;
+}
+
+/* Selected State */
+.choice-card.selected {
+    border-color: #3b82f6;
+    background: linear-gradient(135deg, #eff6ff, #dbeafe);
+    transform: translateY(-4px);
+}
+
+.choice-card.selected::before {
+    transform: scaleX(1);
+}
+
+/* Call to Action Section */
+.cta-section {
+    text-align: center;
+    background: white;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.cta-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 12px;
+}
+
+.cta-description {
+    color: #6b7280;
+    margin-bottom: 24px;
+}
+
+/* Selected Choice Display */
+.selected-choice {
+    display: none;
+    background: #eff6ff;
+    border: 2px solid #3b82f6;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 24px;
+}
+
+.selected-choice.show {
+    display: block;
+}
+
+.selected-choice-text {
+    color: #1e40af;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+/* Proceed Button */
+.proceed-btn {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
+    border: none;
+    padding: 16px 32px;
+    border-radius: 12px;
+    font-size: 1.125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.proceed-btn.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.proceed-btn:hover.active {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.4);
+}
+
+.proceed-btn svg {
+    width: 20px;
+    height: 20px;
+    margin-left: 8px;
+    vertical-align: top;
+}
+
+/* Animation*/
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-in.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header-title h1 {
+        font-size: 2rem;
+    }
+    
+   .choices-grid {
+    display: grid;
+    grid-template-columns: 1fr; 
+    gap: 24px;
+    margin-bottom: 48px;
+}
+    
+    .choice-card {
+        padding: 24px 20px;
+    }
+    
+    .choice-icon {
+        width: 56px;
+        height: 56px;
+        margin-bottom: 20px;
+    }
+    
+    .choice-icon svg {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .cta-section {
+        padding: 24px 20px;
+    }
+    
+    .proceed-btn {
+        width: 100%;
+        padding: 14px 24px;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 16px;
+    }
+    
+    .header {
+        margin-bottom: 32px;
+    }
+    
+    .header-title h1 {
+        font-size: 1.75rem;
+    }
+    
+    .header-subtitle {
+        font-size: 1.125rem;
+    }
+    
+    .header-description {
+        font-size: 0.875rem;
+    }
+    
+    .choice-card {
+        padding: 20px 16px;
+    }
+    
+    .choice-title {
+        font-size: 1.25rem;
+    }
+    
+    .choice-description {
+        font-size: 0.875rem;
+    }
+    
+    .choices-grid {
+        margin-bottom: 32px;
+    }
+}
