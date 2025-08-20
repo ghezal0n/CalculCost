@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "../assets/styles/TransportChoice.css";
 
 const choiceConfig = {
@@ -7,7 +7,7 @@ const choiceConfig = {
   "fca-mill-container": "FCA Mill in Container",
   "fca-port-truck": "FCA Port by Truck",
   "fca-port-container": "FCA Port in Container",
-  fob: "FOB",
+  "fob-container": "FOB",
 };
 
 const choices = [
@@ -70,7 +70,7 @@ const choices = [
     ],
   },
   {
-    key: "fob",
+    key: "fob-container",
     title: "FOB",
     description: "",
     features: [],
@@ -83,6 +83,15 @@ const choices = [
 const TransportChoicePage = () => {
   const [selectedChoice, setSelectedChoice] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const countryId = location.state?.countryId || null;
+  const filteredChoices =
+    countryId === "spain" || countryId === "usa"
+      ? choices.filter(
+          (c) => c.key === "fca-port-truck" || c.key === "fob-container"
+        )
+      : choices;
 
   useEffect(() => {
     // animation d'entrée similaire
@@ -106,6 +115,7 @@ const TransportChoicePage = () => {
     if (choiceKey === "fca-mill-truck" || choiceKey === "fca-mill-container") {
       navigate("/usine", {
         state: {
+          countryId: countryId,
           propositions: [
             "Ocean freight",
             "THC Origin",
@@ -121,11 +131,24 @@ const TransportChoicePage = () => {
     ) {
       navigate("/calcul", {
         state: {
+          countryId: countryId,
           propositions: [
             "Ocean freight",
             "THC Origin",
             "Container Pre-collection",
             "Container discharge + Container stuffing",
+            "ALL IN BY CONTAINER",
+            "ALL IN BY TON",
+          ],
+        },
+      });
+    } else if (choiceKey === "fob-container") {
+      // Navigation pour FOB - va directement au calculateur
+      navigate("/calcul", {
+        state: {
+          countryId: countryId,
+          propositions: [
+            "Ocean freight",
             "ALL IN BY CONTAINER",
             "ALL IN BY TON",
           ],
@@ -159,11 +182,21 @@ const TransportChoicePage = () => {
               Chaque mode offre des avantages spécifiques selon votre situation. */}
           Cliquez sur un mode de transport pour accéder directement au
           calculateur
+          {countryId && (
+            <p className="header-region-description">
+              Région sélectionnée :{" "}
+              {countryId === "usa"
+                ? "États-Unis"
+                : countryId === "spain"
+                ? "Espagne"
+                : "Benelux-Allemagne"}
+            </p>
+          )}
         </p>
       </div>
 
       <div className="choices-grid">
-        {choices.map((c, idx) => (
+        {filteredChoices.map((c) => (
           <div
             key={c.key}
             className={`choice-card ${

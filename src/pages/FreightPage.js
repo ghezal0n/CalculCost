@@ -14,24 +14,25 @@ const FreightPage = () => {
     {
       id: "spain",
       name: "SPAIN",
-      clickable: false,
+      clickable: true,
     },
     {
       id: "usa",
       name: "USA",
-      clickable: false,
+      clickable: true,
     },
   ];
 
   const handleCountryClick = (country) => {
-    if (country.clickable && country.id === "benelux-germany") {
+    if (country.clickable) {
       setCurrentPage("transport");
+      navigate("/transport", { state: { countryId: country.id } });
     }
   };
 
-  if (currentPage === "transport") {
-    navigate("/transport");
-  }
+  //   if (currentPage === "transport") {
+  //     navigate("/transport");
+  //   }
 
   return (
     <div className="app-container">

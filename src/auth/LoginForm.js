@@ -1,38 +1,41 @@
-import React, { useState } from 'react';
-import '../assets/styles/Login.css';
-import { useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Mail, Lock, AlertCircle, Loader2 } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState } from "react";
+import "../assets/styles/Login.css";
+import { useNavigate } from "react-router-dom";
+import { Eye, EyeOff, Mail, Lock, AlertCircle, Loader2 } from "lucide-react";
+import { Link } from "react-router-dom";
+import axios from "axios";
 
 const LoginForm = ({ onLoginSuccess }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
     if (!email || !password) {
-      setError('Veuillez remplir tous les champs.');
+      setError("Veuillez remplir tous les champs.");
       return;
     }
     try {
-      const response = await axios.post('http://localhost:8080/api/auth/login', {
-        email,
-        password
-      });
+      const response = await axios.post(
+        "http://localhost:8080/api/auth/login",
+        {
+          email,
+          password,
+        }
+      );
       const token = response.data.token;
-      localStorage.setItem('token', token);
-      setSuccess('Connexion réussie !');
-      navigate('/transport');
+      localStorage.setItem("token", token);
+      setSuccess("Connexion réussie !");
+      navigate("/freight");
     } catch (err) {
-      setError('Email ou mot de passe incorrect.');
+      setError("Email ou mot de passe incorrect.");
     }
   };
 
@@ -45,7 +48,7 @@ const LoginForm = ({ onLoginSuccess }) => {
       {error && <div className="error-message">{error}</div>}
       <form onSubmit={handleSubmit}>
         <input
-          className={`input-field ${error && !email ? 'error' : ''}`}
+          className={`input-field ${error && !email ? "error" : ""}`}
           type="email"
           placeholder="Email"
           value={email}
@@ -53,8 +56,10 @@ const LoginForm = ({ onLoginSuccess }) => {
         />
         <div className="password-input-container">
           <input
-            className={`input-field password-input ${error && !password ? 'error' : ''}`}
-            type={showPassword ? 'text' : 'password'}
+            className={`input-field password-input ${
+              error && !password ? "error" : ""
+            }`}
+            type={showPassword ? "text" : "password"}
             placeholder="Mot de passe"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -67,7 +72,7 @@ const LoginForm = ({ onLoginSuccess }) => {
           </div>
         </div>
         <button className="submit-button" type="submit" disabled={isLoading}>
-          {isLoading ? 'Connexion en cours...' : 'Se connecter'}
+          {isLoading ? "Connexion en cours..." : "Se connecter"}
         </button>
       </form>
       <div className="login-footer">

@@ -56,6 +56,13 @@ body {
   margin: 0 auto;
 }
 
+.header-region-description {
+  color: #2563eb;
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
 /* Choice Grid */
 .choices-grid {
   display: grid;

@@ -1,10 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Ship, Calculator, MapPin } from "lucide-react";
+import { useLocation } from "react-router-dom";
 import "../assets/styles/CalculPage.css";
+import { freightData, spainFreightData, usaFreightData } from "./Data.js";
 
 const CalculPage = () => {
+  const location = useLocation();
+  const countryId = location.state?.countryId || "benelux-germany"; // Par défaut benelux-germany
+
   const [formData, setFormData] = useState({
-    origin: "",
+    origin: countryId === "benelux-germany" ? "Antwerp" : "",
     destination: "",
     carrier: "",
     oceanFreight: "",
@@ -15,596 +20,41 @@ const CalculPage = () => {
   const [availableRoutes, setAvailableRoutes] = useState([]);
   const [showCalculations, setShowCalculations] = useState(false);
 
-  const freightData = [
-    {
-      origin: "Antwerp",
-      destination: "Alger",
-      carrier: "MSC",
-      oceanFreight: 1650,
-    },
-    {
-      origin: "Rotterdam",
-      destination: "Alger",
-      carrier: "MSC",
-      oceanFreight: 1650,
-    },
-    {
-      origin: "Hamburg",
-      destination: "Alger",
-      carrier: "MSC",
-      oceanFreight: 1650,
-    },
-    {
-      origin: "Antwerp",
-      destination: "Annaba",
-      carrier: "MSC",
-      oceanFreight: 1650,
-    },
-    {
-      origin: "Antwerp",
-      destination: "Annaba",
-      carrier: "MC",
-      oceanFreight: 1550,
-    },
-    {
-      origin: "Rotterdam",
-      destination: "Annaba",
-      carrier: "MSC",
-      oceanFreight: 1650,
-    },
-    {
-      origin: "Hamburg",
-      destination: "Annaba",
-      carrier: "MSC",
-      oceanFreight: 1650,
-    },
-    {
-      origin: "Antwerp",
-      destination: "Skikda",
-      carrier: "MSC",
-      oceanFreight: 1650,
-    },
-    {
-      origin: "Rotterdam",
-      destination: "Skikda",
-      carrier: "MSC",
-      oceanFreight: 1650,
-    },
-    {
-      origin: "Hamburg",
-      destination: "Skikda",
-      carrier: "MSC",
-      oceanFreight: 1650,
-    },
-    {
-      origin: "Antwerp",
-      destination: "Oran",
-      carrier: "MSC",
-      oceanFreight: 1650,
-    },
-    {
-      origin: "Rotterdam",
-      destination: "Oran",
-      carrier: "MSC",
-      oceanFreight: 1650,
-    },
-    {
-      origin: "Hamburg",
-      destination: "Oran",
-      carrier: "MSC",
-      oceanFreight: 1650,
-    },
-    {
-      origin: "Antwerp",
-      destination: "Bejaia",
-      carrier: "MSC",
-      oceanFreight: 1650,
-    },
-    {
-      origin: "Rotterdam",
-      destination: "Bejaia",
-      carrier: "MSC",
-      oceanFreight: 1650,
-    },
-    {
-      origin: "Hamburg",
-      destination: "Bejaia",
-      carrier: "MSC",
-      oceanFreight: 1650,
-    },
-    {
-      origin: "Antwerp",
-      destination: "Djen Djen",
-      carrier: "MSC",
-      oceanFreight: 1650,
-    },
-    {
-      origin: "Rotterdam",
-      destination: "Djen Djen",
-      carrier: "MSC",
-      oceanFreight: 1650,
-    },
-    {
-      origin: "Hamburg",
-      destination: "Djen Djen",
-      carrier: "MSC",
-      oceanFreight: 1650,
-    },
-    {
-      origin: "Antwerp",
-      destination: "Tunis",
-      carrier: "MSC",
-      oceanFreight: 1375,
-    },
-    {
-      origin: "Rotterdam",
-      destination: "Tunis",
-      carrier: "MSC",
-      oceanFreight: 1375,
-    },
-    {
-      origin: "Hamburg",
-      destination: "Tunis",
-      carrier: "MSC",
-      oceanFreight: 1500,
-    },
-    {
-      origin: "Antwerp",
-      destination: "Alger",
-      carrier: "CMA CGM",
-      oceanFreight: 1125,
-    },
-    {
-      origin: "Rotterdam",
-      destination: "Alger",
-      carrier: "CMA CGM",
-      oceanFreight: 1125,
-    },
-    {
-      origin: "Hamburg",
-      destination: "Alger",
-      carrier: "CMA CGM",
-      oceanFreight: 1125,
-    },
-    {
-      origin: "Antwerp",
-      destination: "Annaba",
-      carrier: "CMA CGM",
-      oceanFreight: 1125,
-    },
-    {
-      origin: "Rotterdam",
-      destination: "Annaba",
-      carrier: "CMA CGM",
-      oceanFreight: 1125,
-    },
-    {
-      origin: "Hamburg",
-      destination: "Annaba",
-      carrier: "CMA CGM",
-      oceanFreight: 1125,
-    },
-    {
-      origin: "Antwerp",
-      destination: "Skikda",
-      carrier: "CMA CGM",
-      oceanFreight: 1125,
-    },
-    {
-      origin: "Rotterdam",
-      destination: "Skikda",
-      carrier: "CMA CGM",
-      oceanFreight: 1125,
-    },
-    {
-      origin: "Hamburg",
-      destination: "Skikda",
-      carrier: "CMA CGM",
-      oceanFreight: 1125,
-    },
-    {
-      origin: "Antwerp",
-      destination: "Sfax",
-      carrier: "CMA CGM",
-      oceanFreight: 1500,
-    },
-    {
-      origin: "Rotterdam",
-      destination: "Sfax",
-      carrier: "CMA CGM",
-      oceanFreight: 1500,
-    },
-    {
-      origin: "Hamburg",
-      destination: "Sfax",
-      carrier: "CMA CGM",
-      oceanFreight: 1500,
-    },
-    {
-      origin: "Antwerp",
-      destination: "Sousse",
-      carrier: "CMA CGM",
-      oceanFreight: 1500,
-    },
-    {
-      origin: "Rotterdam",
-      destination: "Sousse",
-      carrier: "CMA CGM",
-      oceanFreight: 1500,
-    },
-    {
-      origin: "Hamburg",
-      destination: "Sousse",
-      carrier: "CMA CGM",
-      oceanFreight: 1500,
-    },
-    {
-      origin: "Antwerp",
-      destination: "Casablanca",
-      carrier: "CMA CGM",
-      oceanFreight: 825,
-    },
-    {
-      origin: "Rotterdam",
-      destination: "Casablanca",
-      carrier: "CMA CGM",
-      oceanFreight: 825,
-    },
-    {
-      origin: "Hamburg",
-      destination: "Casablanca",
-      carrier: "CMA CGM",
-      oceanFreight: 825,
-    },
-    {
-      origin: "Antwerp",
-      destination: "Misuratra",
-      carrier: "MSC",
-      oceanFreight: 2050,
-    },
-    {
-      origin: "Rotterdam",
-      destination: "Misuratra",
-      carrier: "MSC",
-      oceanFreight: 2050,
-    },
-    {
-      origin: "Hamburg",
-      destination: "Misuratra",
-      carrier: "CMA CGM",
-      oceanFreight: 1900,
-    },
-    {
-      origin: "Antwerp",
-      destination: "Ghazaouet",
-      carrier: "CMA CGM",
-      oceanFreight: 2000,
-    },
-    {
-      origin: "Hamburg",
-      destination: "Ghazaouet",
-      carrier: "CMA CGM",
-      oceanFreight: 2000,
-    },
-    {
-      origin: "Antwerp",
-      destination: "Mombasa",
-      carrier: "MSC",
-      oceanFreight: 1600,
-    },
-    {
-      origin: "Rotterdam",
-      destination: "Mombasa",
-      carrier: "MSC",
-      oceanFreight: 1600,
-    },
-    {
-      origin: "Hamburg",
-      destination: "Mombasa",
-      carrier: "MSC",
-      oceanFreight: 1600,
-    },
-    {
-      origin: "Antwerp",
-      destination: "Dar es Salam",
-      carrier: "MSC",
-      oceanFreight: 1600,
-    },
-    {
-      origin: "Rotterdam",
-      destination: "Dar es Salam",
-      carrier: "MSC",
-      oceanFreight: 1600,
-    },
-    {
-      origin: "Hamburg",
-      destination: "Dar es Salam",
-      carrier: "MSC",
-      oceanFreight: 1600,
-    },
-    {
-      origin: "Antwerp",
-      destination: "Tema",
-      carrier: "CMA CGM",
-      oceanFreight: 1385,
-    },
-    {
-      origin: "Rotterdam",
-      destination: "Tema",
-      carrier: "CMA CGM",
-      oceanFreight: 1385,
-    },
-    {
-      origin: "Hamburg",
-      destination: "Tema",
-      carrier: "CMA CGM",
-      oceanFreight: 1385,
-    },
-    {
-      origin: "Antwerp",
-      destination: "Abidjan",
-      carrier: "CMA CGM",
-      oceanFreight: 1385,
-    },
-    {
-      origin: "Rotterdam",
-      destination: "Abidjan",
-      carrier: "CMA CGM",
-      oceanFreight: 1385,
-    },
-    {
-      origin: "Hamburg",
-      destination: "Abidjan",
-      carrier: "CMA CGM",
-      oceanFreight: 1385,
-    },
-    {
-      origin: "Antwerp",
-      destination: "Dakar",
-      carrier: "CMA CGM",
-      oceanFreight: 1600,
-    },
-    {
-      origin: "Rotterdam",
-      destination: "Dakar",
-      carrier: "CMA CGM",
-      oceanFreight: 1600,
-    },
-    {
-      origin: "Hamburg",
-      destination: "Dakar",
-      carrier: "CMA CGM",
-      oceanFreight: 1600,
-    },
-    {
-      origin: "Antwerp",
-      destination: "Lome",
-      carrier: "MSC",
-      oceanFreight: 2525,
-    },
-    {
-      origin: "Rotterdam",
-      destination: "Lome",
-      carrier: "Grimaldi",
-      oceanFreight: 2925,
-    },
-    {
-      origin: "Hamburg",
-      destination: "Lome",
-      carrier: "Grimaldi",
-      oceanFreight: 2925,
-    },
-    {
-      origin: "Antwerp",
-      destination: "Douala",
-      carrier: "MSC",
-      oceanFreight: 2400,
-    },
-    {
-      origin: "Rotterdam",
-      destination: "Douala",
-      carrier: "MSC",
-      oceanFreight: 2400,
-    },
-    {
-      origin: "Hamburg",
-      destination: "Douala",
-      carrier: "MSC",
-      oceanFreight: 2450,
-    },
-    {
-      origin: "Antwerp",
-      destination: "Lagos/Tincan",
-      carrier: "MSC",
-      oceanFreight: 1800,
-    },
-    {
-      origin: "Rotterdam",
-      destination: "Lagos/Tincan",
-      carrier: "MSC",
-      oceanFreight: 1800,
-    },
-    {
-      origin: "Hamburg",
-      destination: "Lagos/Tincan",
-      carrier: "MSC",
-      oceanFreight: 1835,
-    },
-    {
-      origin: "Antwerp",
-      destination: "Lekki",
-      carrier: "CMA CGM",
-      oceanFreight: 1575,
-    },
-    {
-      origin: "Rotterdam",
-      destination: "Lekki",
-      carrier: "CMA CGM",
-      oceanFreight: 1575,
-    },
-    {
-      origin: "Hamburg",
-      destination: "Lekki",
-      carrier: "CMA CGM",
-      oceanFreight: 1575,
-    },
-    {
-      origin: "Antwerp",
-      destination: "Apapa",
-      carrier: "CMA CGM",
-      oceanFreight: 1625,
-    },
-    {
-      origin: "Rotterdam",
-      destination: "Apapa",
-      carrier: "CMA CGM",
-      oceanFreight: 1625,
-    },
-    {
-      origin: "Hamburg",
-      destination: "Apapa",
-      carrier: "CMA CGM",
-      oceanFreight: 1625,
-    },
-    {
-      origin: "Antwerp",
-      destination: "Luanda",
-      carrier: "CMA CGM",
-      oceanFreight: 1675,
-    },
-    {
-      origin: "Rotterdam",
-      destination: "Luanda",
-      carrier: "CMA CGM",
-      oceanFreight: 1675,
-    },
-    {
-      origin: "Hamburg",
-      destination: "Luanda",
-      carrier: "CMA CGM",
-      oceanFreight: 1675,
-    },
-    {
-      origin: "Antwerp",
-      destination: "Monrovia",
-      carrier: "Grimaldi",
-      oceanFreight: 3700,
-    },
-    {
-      origin: "Rotterdam",
-      destination: "Monrovia",
-      carrier: "Grimaldi",
-      oceanFreight: 3700,
-    },
-    {
-      origin: "Hamburg",
-      destination: "Monrovia",
-      carrier: "Grimaldi",
-      oceanFreight: 3700,
-    },
-    {
-      origin: "Antwerp",
-      destination: "Durban",
-      carrier: "MSC",
-      oceanFreight: 1000,
-    },
-    {
-      origin: "Rotterdam",
-      destination: "Durban",
-      carrier: "MSC",
-      oceanFreight: 1000,
-    },
-    {
-      origin: "Hamburg",
-      destination: "Durban",
-      carrier: "MSC",
-      oceanFreight: 1125,
-    },
-    {
-      origin: "Antwerp",
-      destination: "Cape Town",
-      carrier: "MSC",
-      oceanFreight: 1000,
-    },
-    {
-      origin: "Rotterdam",
-      destination: "Cape Town",
-      carrier: "MSC",
-      oceanFreight: 1000,
-    },
-    {
-      origin: "Hamburg",
-      destination: "Cape Town",
-      carrier: "MSC",
-      oceanFreight: 1125,
-    },
-    {
-      origin: "Antwerp",
-      destination: "Port Elisabeth",
-      carrier: "MSC",
-      oceanFreight: 1000,
-    },
-    {
-      origin: "Rotterdam",
-      destination: "Port Elisabeth",
-      carrier: "MSC",
-      oceanFreight: 1000,
-    },
-    {
-      origin: "Hamburg",
-      destination: "Port Elisabeth",
-      carrier: "MSC",
-      oceanFreight: 1125,
-    },
-    {
-      origin: "Antwerp",
-      destination: "Agadir",
-      carrier: "Maersk",
-      oceanFreight: 1100,
-    },
-    {
-      origin: "Rotterdam",
-      destination: "Agadir",
-      carrier: "Maersk",
-      oceanFreight: 1100,
-    },
-    {
-      origin: "Hamburg",
-      destination: "Agadir",
-      carrier: "Maersk",
-      oceanFreight: 1100,
-    },
-    {
-      origin: "Antwerp",
-      destination: "Tanger",
-      carrier: "CMA CGM",
-      oceanFreight: 900,
-    },
-    {
-      origin: "Rotterdam",
-      destination: "Tanger",
-      carrier: "CMA CGM",
-      oceanFreight: 900,
-    },
-    {
-      origin: "Hamburg",
-      destination: "Tanger",
-      carrier: "CMA CGM",
-      oceanFreight: 900,
-    },
-    {
-      origin: "Hamburg",
-      destination: "Tanger",
-      carrier: "MSC",
-      oceanFreight: 800,
-    },
-  ];
+  const getCurrency = () => {
+    return countryId === "usa" ? "$" : "€";
+  };
+
+  // Fonction pour créer les données pour l'Espagne
+  function getSpainFreightData() {
+    const spainData = [];
+
+    spainFreightData.forEach((route) => {
+      spainData.push({
+        ...route,
+        origin: "Barcelone/Valence",
+      });
+    });
+    return spainData;
+  }
+
+  // Sélectionner les données selon le pays
+  const getCurrentFreightData = () => {
+    if (countryId === "spain") {
+      return getSpainFreightData();
+    } else if (countryId === "usa") {
+      return usaFreightData;
+    }
+    return freightData; //benelux-germany
+  };
+
+  const currentFreightData = getCurrentFreightData();
 
   const fixedRatesAntwerp = {
     thcOrigin: 200.0,
     containerPreCollection: 255.0,
     stowage: 237.5,
     preCarriageNiederauer: 675.0,
+    preCarriageDurenKreuzau: 540.0,
     tonWeight: 24,
   };
 
@@ -615,11 +65,43 @@ const CalculPage = () => {
     tonWeight: 24,
   };
 
+  const fixedRatesSpain = {
+    thcOrigin: 150.0,
+    stowage: 400.0,
+    preCarriageNiederauer: 500.0,
+    tonWeight: 24,
+  };
+
+  const fixedRatesUSA = {
+    Savannah: {
+      handlingInOutDrayage: 890,
+      tonWeight: 24,
+    },
+    "New Orleans": {
+      handlingInOutDrayage: 800,
+      drayagePortsOfAmerica: 235,
+      tonWeight: 24,
+    },
+    Houston: {
+      handlingInOutDrayagesChassis: 725,
+      tonWeight: 24,
+    },
+  };
+
   // Extraire les valeurs uniques
-  const origins = [...new Set(freightData.map((item) => item.origin))];
+  const origins = [...new Set(currentFreightData.map((item) => item.origin))];
+
+  useEffect(() => {
+    if (countryId === "spain" && origins.length === 1 && !formData.origin) {
+      setFormData((prev) => ({
+        ...prev,
+        origin: origins[0],
+      }));
+    }
+  }, [origins, formData.origin]);
   const destinations = [
-    ...new Set(freightData.map((item) => item.destination)),
-  ];
+    ...new Set(currentFreightData.map((item) => item.destination)),
+  ].sort();
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({
@@ -632,7 +114,7 @@ const CalculPage = () => {
   const searchRoutes = () => {
     if (!formData.origin || !formData.destination) return;
 
-    const matchingRoutes = freightData.filter(
+    const matchingRoutes = currentFreightData.filter(
       (route) =>
         route.origin === formData.origin &&
         route.destination === formData.destination
@@ -647,58 +129,153 @@ const CalculPage = () => {
     if (selectedFCAMode === "fca-mill-container") {
       return "mill-container";
     }
+    if (selectedFCAMode === "fca-port-container") {
+      return "port-container";
+    }
+    if (selectedFCAMode === "fca-mill-truck") {
+      return "mill-truck";
+    }
+    if (selectedFCAMode === "fob-container") {
+      return "fob-container";
+    }
     return "standard";
   };
 
   const calculateTotal = (oceanFreight, origin) => {
-    const isHamburg = origin === "Hamburg";
+    let fixedRates;
+
+    // Sélectionner les tarifs selon l'origine et le pays
+    if (countryId === "spain") {
+      fixedRates = fixedRatesSpain;
+    } else if (countryId === "usa") {
+      fixedRates = fixedRatesUSA[origin] || fixedRatesUSA["Savannah"];
+    } else if (origin === "Hamburg") {
+      fixedRates = fixedRatesHamburg;
+    } else {
+      fixedRates = fixedRatesAntwerp;
+    }
+
     const calculationType = getCalculationType();
-
-    const thcOrigin = isHamburg
-      ? fixedRatesHamburg.thcOrigin
-      : fixedRatesAntwerp.thcOrigin;
-
-    const tonWeight = isHamburg
-      ? fixedRatesHamburg.tonWeight
-      : fixedRatesAntwerp.tonWeight;
+    const isHamburg = origin === "Hamburg";
 
     let calculation = {
       oceanFreight,
-      thcOrigin,
-      tonWeight,
+      totalFobPreCarrier: 695,
+      thcOrigin: fixedRates.thcOrigin,
+      tonWeight: fixedRates.tonWeight,
     };
 
+    // Mode FOB : seulement Ocean freight
+    if (calculationType === "fob-container") {
+      calculation = {
+        ...calculation,
+        allInByContainer: oceanFreight,
+        allInByTon: oceanFreight / fixedRates.tonWeight,
+        calculationType: "fob-container",
+      };
+      return calculation;
+    }
+
+    // Gestion spéciale pour les USA
+    if (countryId === "usa") {
+      if (origin === "Savannah") {
+        calculation = {
+          ...calculation,
+          handlingInOutDrayage: fixedRates.handlingInOutDrayage,
+          allInByContainer: oceanFreight + fixedRates.handlingInOutDrayage,
+        };
+      } else if (origin === "New Orleans") {
+        calculation = {
+          ...calculation,
+          handlingInOutDrayage: fixedRates.handlingInOutDrayage,
+          drayagePortsOfAmerica: fixedRates.drayagePortsOfAmerica,
+          allInByContainer: oceanFreight + fixedRates.handlingInOutDrayage,
+          allInByContainerWithPorts:
+            oceanFreight +
+            fixedRates.handlingInOutDrayage +
+            fixedRates.drayagePortsOfAmerica,
+        };
+      } else if (origin === "Houston") {
+        calculation = {
+          ...calculation,
+          handlingInOutDrayagesChassis: fixedRates.handlingInOutDrayagesChassis,
+          allInByContainer:
+            oceanFreight + fixedRates.handlingInOutDrayagesChassis,
+        };
+      }
+      calculation.allInByTon =
+        calculation.allInByContainer / fixedRates.tonWeight;
+      calculation.calculationType = "usa";
+      return calculation;
+    }
+
+    // Gestion spéciale pour l'Espagne en mode FCA port by truck
+    if (countryId === "spain" && selectedFCAMode === "fca-port-truck") {
+      calculation = {
+        ...calculation,
+        fobCharges: 695,
+        allInByContainer: oceanFreight + 695,
+        allInByTon: (oceanFreight + 695) / fixedRates.tonWeight,
+        calculationType: "spain-fca-port-truck",
+      };
+      return calculation;
+    }
+
     if (calculationType === "mill-container") {
-      // Pour FCA Mill in Container : Ocean freight + THC Origin + Pre Carriage Niederauer Mühle
-      const preCarriageNiederauer = isHamburg
-        ? fixedRatesHamburg.preCarriageNiederauer
-        : fixedRatesAntwerp.preCarriageNiederauer;
+      //FCA Mill in Container : Ocean freight + THC Origin + Pre Carriage Niederauer Mühle
+      calculation = {
+        ...calculation,
+        preCarriageNiederauer: fixedRates.preCarriageNiederauer,
+        allInByContainer:
+          oceanFreight +
+          fixedRates.thcOrigin +
+          fixedRates.preCarriageNiederauer,
+      };
+    } else if (calculationType === "port-container") {
+      calculation = {
+        ...calculation,
+        preCarriageNiederauer: fixedRates.preCarriageNiederauer,
+        allInByContainer: oceanFreight + fixedRates.thcOrigin,
+      };
+    } else if (calculationType === "mill-truck" && origin === "Antwerp") {
+      //FCA Mill by Truck (Antwerp) : Ocean freight + THC Origin + Container Pre-collection + Container discharge + Container stuffing + Pre Carriage Düren/Kreuzau
 
       calculation = {
         ...calculation,
-        preCarriageNiederauer,
-        allInByContainer: oceanFreight + thcOrigin + preCarriageNiederauer,
+        containerPreCollection: fixedRates.containerPreCollection,
+        stowage: fixedRates.stowage,
+        preCarriageDurenKreuzau: fixedRates.preCarriageDurenKreuzau,
+        allInByContainer:
+          oceanFreight +
+          fixedRates.thcOrigin +
+          fixedRates.containerPreCollection +
+          fixedRates.stowage +
+          fixedRates.preCarriageDurenKreuzau,
       };
     } else {
       // Pour tous les autres cas : Ocean freight + THC Origin + Container Pre-collection + Container discharge + Container stuffing
-      const stowage = isHamburg
-        ? fixedRatesHamburg.stowage
-        : fixedRatesAntwerp.stowage;
-      const containerPreCollection = isHamburg
-        ? 0
-        : fixedRatesAntwerp.containerPreCollection;
+      const containerPreCollection =
+        countryId === "spain" || isHamburg
+          ? 0
+          : fixedRatesAntwerp.containerPreCollection;
 
       calculation = {
         ...calculation,
-        containerPreCollection: isHamburg ? null : containerPreCollection,
-        stowage,
-        allInByContainer: isHamburg
-          ? oceanFreight + thcOrigin + stowage
-          : oceanFreight + thcOrigin + containerPreCollection + stowage,
+        containerPreCollection:
+          containerPreCollection > 0 ? containerPreCollection : null,
+        stowage: fixedRates.stowage,
+        allInByContainer:
+          containerPreCollection > 0
+            ? oceanFreight +
+              fixedRates.thcOrigin +
+              containerPreCollection +
+              fixedRates.stowage
+            : oceanFreight + fixedRates.thcOrigin + fixedRates.stowage,
       };
     }
 
-    calculation.allInByTon = calculation.allInByContainer / tonWeight;
+    calculation.allInByTon =
+      calculation.allInByContainer / fixedRates.tonWeight;
     calculation.calculationType = calculationType;
 
     return calculation;
@@ -732,36 +309,204 @@ const CalculPage = () => {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                   })}{" "}
-                  €
-                </td>
-              </tr>
-              <tr>
-                <td className="table-label">THC Origin</td>
-                <td className="table-value">
-                  {calculation.thcOrigin.toLocaleString("fr-FR", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}{" "}
-                  €
+                  {getCurrency()}
                 </td>
               </tr>
 
-              {/* Affichage conditionnel selon le type de calcul */}
-              {calculation.calculationType === "mill-container" ? (
+              {/* Affichage conditionnel selon le type de calcul - FOB simplifié */}
+              {calculation.calculationType ===
+              "fob-container" ? // Pour FOB - seulement Ocean freight (déjà affiché ci-dessus), pas d'autres lignes
+              null : calculation.calculationType === "mill-container" ? (
                 // Pour FCA Mill in Container
+                <>
+                  <tr>
+                    <td className="table-label">THC Origin</td>
+                    <td className="table-value">
+                      {calculation.thcOrigin.toLocaleString("fr-FR", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}{" "}
+                      {getCurrency()}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="table-label">
+                      Pre Carriage Niederauer Mühle
+                    </td>
+                    <td className="table-value">
+                      {calculation.preCarriageNiederauer.toLocaleString(
+                        "fr-FR",
+                        {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        }
+                      )}{" "}
+                      {getCurrency()}
+                    </td>
+                  </tr>
+                </>
+              ) : calculation.calculationType === "port-container" ? (
+                // Pour FCA Port in Container
                 <tr>
-                  <td className="table-label">Pre Carriage Niederauer Mühle</td>
+                  <td className="table-label">THC Origin</td>
                   <td className="table-value">
-                    {calculation.preCarriageNiederauer.toLocaleString("fr-FR", {
+                    {calculation.thcOrigin.toLocaleString("fr-FR", {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
                     })}{" "}
-                    €
+                    {getCurrency()}
                   </td>
                 </tr>
+              ) : calculation.calculationType === "mill-truck" &&
+                route.origin === "Antwerp" ? (
+                // Pour FCA Mill by Truck (uniquement pour Antwerp)
+                <>
+                  <tr>
+                    <td className="table-label">THC Origin</td>
+                    <td className="table-value">
+                      {calculation.thcOrigin.toLocaleString("fr-FR", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}{" "}
+                      {getCurrency()}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="table-label">Container Pre-collection</td>
+                    <td className="table-value">
+                      {calculation.containerPreCollection.toLocaleString(
+                        "fr-FR",
+                        { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+                      )}{" "}
+                      {getCurrency()}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="table-label">
+                      Container discharge + Container stuffing
+                    </td>
+                    <td className="table-value">
+                      {calculation.stowage.toLocaleString("fr-FR", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}{" "}
+                      {getCurrency()}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="table-label">
+                      Pre Carriage Düren/Kreuzau - Van Moer
+                    </td>
+                    <td className="table-value">
+                      {calculation.preCarriageDurenKreuzau.toLocaleString(
+                        "fr-FR",
+                        {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        }
+                      )}{" "}
+                      {getCurrency()}
+                    </td>
+                  </tr>
+                </>
+              ) : calculation.calculationType === "spain-fca-port-truck" ? (
+                <>
+                  <tr>
+                    <td className="table-label">Container FOB Charges</td>
+                    <td className="table-value">
+                      {calculation.fobCharges.toLocaleString("fr-FR", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}{" "}
+                      {getCurrency()}
+                    </td>
+                  </tr>
+                </>
+              ) : countryId === "usa" ? (
+                // Affichage spécial pour les USA
+                <>
+                  {route.origin === "Savannah" && (
+                    <tr>
+                      <td className="table-label">Handling in/out/drayage</td>
+                      <td className="table-value">
+                        {calculation.handlingInOutDrayage.toLocaleString(
+                          "fr-FR",
+                          {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          }
+                        )}{" "}
+                        {getCurrency()}
+                      </td>
+                    </tr>
+                  )}
+
+                  {route.origin === "New Orleans" && (
+                    <>
+                      <tr>
+                        <td className="table-label">
+                          Handling in/out/drayage per container
+                        </td>
+                        <td className="table-value">
+                          {calculation.handlingInOutDrayage.toLocaleString(
+                            "fr-FR",
+                            {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            }
+                          )}{" "}
+                          {getCurrency()}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="table-label">
+                          Drayage/container additional if Ports of America
+                        </td>
+                        <td className="table-value">
+                          {calculation.drayagePortsOfAmerica.toLocaleString(
+                            "fr-FR",
+                            {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            }
+                          )}{" "}
+                          {getCurrency()}
+                        </td>
+                      </tr>
+                    </>
+                  )}
+
+                  {route.origin === "Houston" && (
+                    <tr>
+                      <td className="table-label">
+                        Container handling in/out, drayage, chassis
+                      </td>
+                      <td className="table-value">
+                        {calculation.handlingInOutDrayagesChassis.toLocaleString(
+                          "fr-FR",
+                          {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          }
+                        )}{" "}
+                        {getCurrency()}
+                      </td>
+                    </tr>
+                  )}
+                </>
               ) : (
                 // Pour tous les autres cas
                 <>
+                  <tr>
+                    <td className="table-label">THC Origin</td>
+                    <td className="table-value">
+                      {calculation.thcOrigin.toLocaleString("fr-FR", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}{" "}
+                      {getCurrency()}
+                    </td>
+                  </tr>
                   {calculation.containerPreCollection !== null && (
                     <tr>
                       <td className="table-label">Container Pre-collection</td>
@@ -770,7 +515,7 @@ const CalculPage = () => {
                           "fr-FR",
                           { minimumFractionDigits: 2, maximumFractionDigits: 2 }
                         )}{" "}
-                        €
+                        {getCurrency()}
                       </td>
                     </tr>
                   )}
@@ -783,7 +528,7 @@ const CalculPage = () => {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
                       })}{" "}
-                      €
+                      {getCurrency()}
                     </td>
                   </tr>
                 </>
@@ -796,7 +541,7 @@ const CalculPage = () => {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                   })}{" "}
-                  €
+                  {getCurrency()}
                 </td>
               </tr>
               <tr className="table-ton-container">
@@ -806,7 +551,7 @@ const CalculPage = () => {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                   })}{" "}
-                  €
+                  {getCurrency()}
                 </td>
               </tr>
             </tbody>
@@ -822,7 +567,7 @@ const CalculPage = () => {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               })}{" "}
-              €
+              {getCurrency()}
             </p>
             <p className="text-sm text-green-600 mt-1">
               Soit{" "}
@@ -830,7 +575,7 @@ const CalculPage = () => {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               })}{" "}
-              € par tonne
+              {getCurrency()} par tonne
             </p>
           </div>
         </div>
@@ -866,9 +611,19 @@ const CalculPage = () => {
             Comparez les offres de plusieurs transporteurs
           </p>
           {selectedFCAMode && (
-            <p className="text-sm text-gray-600">
+            <p className="header-mode-description">
               Mode sélectionné :{" "}
               {localStorage.getItem("selectedFCAModeLabel") || selectedFCAMode}
+            </p>
+          )}
+          {countryId && (
+            <p className="header-region-description">
+              Région :
+              {countryId === "usa"
+                ? " États-Unis"
+                : countryId === "spain"
+                ? " Espagne"
+                : " Benelux-Allemagne"}
             </p>
           )}
         </div>
@@ -952,18 +707,15 @@ const CalculPage = () => {
         {showCalculations && (
           <div className="space-y-6">
             {availableRoutes.length === 0 && (
-              <div className="text-center py-12 bg-white rounded-xl shadow-lg">
-                <div className="text-orange-600 text-6xl mb-4">⚠️</div>
-                <h3 className="text-xl font-semibold text-orange-800 mb-2">
-                  Aucune route disponible
-                </h3>
-                <p className="text-orange-700">
-                  Aucune offre trouvée pour cette combinaison
-                  origine/destination.
+              <div className="no-routes-message">
+                <div className="no-routes-icon">⚠️</div>
+                <h3 className="no-routes-title">Aucune route disponible</h3>
+                <p className="no-routes-description">
+                  Aucune offre trouvée pour {formData.origin} /{" "}
+                  {formData.destination}.
                 </p>
               </div>
             )}
-
             {availableRoutes.length > 0 && (
               <>
                 {/* En-tête des résultats */}
@@ -992,7 +744,7 @@ const CalculPage = () => {
                             minimumFractionDigits: 2,
                             maximumFractionDigits: 2,
                           })}{" "}
-                          €
+                          {getCurrency()}
                         </p>
                         <p className="text-sm text-green-600">
                           {bestOffer.carrier}
