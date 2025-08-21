@@ -14,12 +14,12 @@ const choices = [
   {
     key: "fca-mill-truck",
     title: "FCA Mill by Truck",
-    description: "Livraison directe depuis l'usine par transport routier",
+    description: "Direct delivery from the mill by road transport",
     features: [
-      "Pickup direct à l'usine",
-      "Transport routier flexible",
-      "Délais optimisés",
-      "Coûts réduits sur courtes distances",
+      "Direct pickup at the mill",
+      "Flexible road transport",
+      "Optimized lead times",
+      "Reduced costs for short distances",
     ],
     svgPaths: [
       "M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z",
@@ -29,12 +29,12 @@ const choices = [
   {
     key: "fca-mill-container",
     title: "FCA Mill in Container",
-    description: "Marchandises emballées en conteneur depuis l'usine",
+    description: "Goods packed in container from the mill",
     features: [
-      "Conteneurisation à l'usine",
-      "Protection maximale",
-      "Optimisation logistique",
-      "Réduction des manipulations",
+      "Containerization at the mill",
+      "Maximum protection",
+      "Logistics optimization",
+      "Reduced handling",
     ],
     svgPaths: [
       "M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4",
@@ -43,12 +43,12 @@ const choices = [
   {
     key: "fca-port-truck",
     title: "FCA Port by Truck",
-    description: "Livraison au port par transport routier",
+    description: "Delivery to port by road transport",
     features: [
-      "Livraison directe au port",
-      "Flexibilité des horaires",
-      "Contrôle du timing",
-      "Adaptation aux contraintes portuaires",
+      "Direct delivery to port",
+      "Flexible scheduling",
+      "Timing control",
+      "Adaptation to port constraints",
     ],
     svgPaths: [
       "M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z",
@@ -58,12 +58,12 @@ const choices = [
   {
     key: "fca-port-container",
     title: "FCA Port in Container",
-    description: "Marchandises livrées au port en conteneur prêt à expédier",
+    description: "Goods delivered to port in container ready for shipment",
     features: [
-      "Conteneur prêt pour l'export",
-      "Efficacité portuaire maximale",
-      "Réduction des temps d'attente",
-      "Processus streamliné",
+      "Container ready for export",
+      "Maximum port efficiency",
+      "Reduced waiting times",
+      "Streamlined process",
     ],
     svgPaths: [
       "M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4",
@@ -174,22 +174,21 @@ const TransportChoicePage = () => {
               d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
             ></path>
           </svg>
-          <h1>Mode de Transport FCA</h1>
+          <h1>FCA Transport Mode</h1>
         </div>
         {/* <p className="header-subtitle">Choisissez votre mode de livraison préféré</p> */}
         <p className="header-description">
           {/* Sélectionnez l'option qui correspond le mieux à vos besoins logistiques. 
               Chaque mode offre des avantages spécifiques selon votre situation. */}
-          Cliquez sur un mode de transport pour accéder directement au
-          calculateur
+          Click on a transport mode to access the calculator directly
           {countryId && (
             <p className="header-region-description">
-              Région sélectionnée :{" "}
+              Selected region:{" "}
               {countryId === "usa"
-                ? "États-Unis"
+                ? "United States"
                 : countryId === "spain"
-                ? "Espagne"
-                : "Benelux-Allemagne"}
+                ? "Spain"
+                : "Benelux-Germany"}
             </p>
           )}
         </p>

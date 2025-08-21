@@ -6,7 +6,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import RegisterPage from "./pages/RegistrePage";
-import FreightPage from "./pages/FreightPage";
+import RegionPage from "./pages/RegionPage";
 import TransportChoicePage from "./pages/TransportChoicePage";
 import CalculPage from "./pages/CalculPage";
 import HistoriquePage from "./pages/HistoriquePage";
@@ -18,14 +18,14 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LoginForm />} />
-        <Route path="/login" element={<LoginForm />} />
-        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/" element={<RegionPage />} />
+        {/* <Route path="/login" element={<LoginForm />} />
+        <Route path="/register" element={<RegisterPage />} /> */}
         <Route
           path="/freight"
           element={
             <ProtectedRoute>
-              <FreightPage />
+              <RegionPage />
             </ProtectedRoute>
           }
         />

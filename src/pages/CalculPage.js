@@ -293,7 +293,7 @@ const CalculPage = () => {
         <div className="proposal-header">
           <h3 className="proposal-title">
             <Ship className="title-icon" />
-            Proposition {index + 1}
+            Proposal {index + 1}
           </h3>
           <div className="carrier-badge">{route.carrier}</div>
         </div>
@@ -315,8 +315,8 @@ const CalculPage = () => {
 
               {/* Affichage conditionnel selon le type de calcul - FOB simplifié */}
               {calculation.calculationType ===
-              "fob-container" ? // Pour FOB - seulement Ocean freight (déjà affiché ci-dessus), pas d'autres lignes
-              null : calculation.calculationType === "mill-container" ? (
+              "fob-container" ? null : calculation.calculationType === // Pour FOB - seulement Ocean freight (déjà affiché ci-dessus), pas d'autres lignes
+                "mill-container" ? (
                 // Pour FCA Mill in Container
                 <>
                   <tr>
@@ -561,7 +561,7 @@ const CalculPage = () => {
         {/* Prix total en évidence */}
         <div className="final-price">
           <div className="text-center">
-            <p className="green-label">PRIX TOTAL PAR CONTENEUR</p>
+            <p className="green-label">TOTAL PRICE PER CONTAINER</p>
             <p className="text-3xl font-bold text-green-700">
               {calculation.allInByContainer.toLocaleString("fr-FR", {
                 minimumFractionDigits: 2,
@@ -570,12 +570,12 @@ const CalculPage = () => {
               {getCurrency()}
             </p>
             <p className="text-sm text-green-600 mt-1">
-              Soit{" "}
+              That is{" "}
               {calculation.allInByTon.toLocaleString("fr-FR", {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               })}{" "}
-              {getCurrency()} par tonne
+              {getCurrency()} per ton
             </p>
           </div>
         </div>
@@ -605,25 +605,25 @@ const CalculPage = () => {
         <div className="header mb-8">
           <div className="header-title">
             <Ship className="ship-icon" />
-            <h1>Calculateur de Fret Maritime</h1>
+            <h1>Maritime Freight Calculator</h1>
           </div>
           <p className="header-subtitle">
-            Comparez les offres de plusieurs transporteurs
+            Compare offers from multiple carriers
           </p>
           {selectedFCAMode && (
             <p className="header-mode-description">
-              Mode sélectionné :{" "}
+              Selected mode:{" "}
               {localStorage.getItem("selectedFCAModeLabel") || selectedFCAMode}
             </p>
           )}
           {countryId && (
             <p className="header-region-description">
-              Région :
+              Region:
               {countryId === "usa"
-                ? " États-Unis"
+                ? " United States"
                 : countryId === "spain"
-                ? " Espagne"
-                : " Benelux-Allemagne"}
+                ? " Spain"
+                : " Benelux-Germany"}
             </p>
           )}
         </div>
@@ -632,7 +632,7 @@ const CalculPage = () => {
         <div className="results-header">
           <h2 className="proposal-title">
             <Calculator className="card-title-icon" />
-            Rechercher des offres
+            Search for offers
           </h2>
 
           <div className="grid md:grid-cols-3 gap-6">
@@ -641,7 +641,7 @@ const CalculPage = () => {
               <label className="form-label">
                 <span className="label-icon-text">
                   <MapPin className="mappin-icon" />
-                  <span>Port d'origine</span>
+                  <span>Port of origin</span>
                 </span>
               </label>
 
@@ -650,7 +650,7 @@ const CalculPage = () => {
                 value={formData.origin}
                 onChange={(e) => handleInputChange("origin", e.target.value)}
               >
-                <option value="">Sélectionnez le port d'origine</option>
+                <option value="">Select port of origin</option>
                 {origins.map((origin) => (
                   <option key={origin} value={origin}>
                     {origin}
@@ -664,7 +664,7 @@ const CalculPage = () => {
               <label className="form-label">
                 <span className="label-icon-text">
                   <MapPin className="mappin-icon" />
-                  <span>Port de destination</span>
+                  <span>Destination port</span>
                 </span>
               </label>
               <select
@@ -674,7 +674,7 @@ const CalculPage = () => {
                   handleInputChange("destination", e.target.value)
                 }
               >
-                <option value="">Sélectionnez le port de destination</option>
+                <option value="">Select destination port</option>
                 {destinations.map((destination) => (
                   <option key={destination} value={destination}>
                     {destination}
@@ -697,7 +697,7 @@ const CalculPage = () => {
                 className={`btn ${isFormValid() ? "btn-primary" : ""}`}
               >
                 <Calculator className="icon" />
-                Valider
+                Validate
               </button>
             </div>
           </div>
@@ -709,10 +709,10 @@ const CalculPage = () => {
             {availableRoutes.length === 0 && (
               <div className="no-routes-message">
                 <div className="no-routes-icon">⚠️</div>
-                <h3 className="no-routes-title">Aucune route disponible</h3>
+                <h3 className="no-routes-title">No routes available</h3>
                 <p className="no-routes-description">
-                  Aucune offre trouvée pour {formData.origin} /{" "}
-                  {formData.destination}.
+                  No offers found for {formData.origin} / {formData.destination}
+                  .
                 </p>
               </div>
             )}
@@ -726,16 +726,14 @@ const CalculPage = () => {
                         {formData.origin} → {formData.destination}
                       </h2>
                       <p className="text-gray-600">
-                        {availableRoutes.length} offre
-                        {availableRoutes.length > 1 ? "s" : ""} disponible
+                        {availableRoutes.length} offer
+                        {availableRoutes.length > 1 ? "s" : ""} available
                         {availableRoutes.length > 1 ? "s" : ""}
                       </p>
                     </div>
                     {bestOffer && (
                       <div className="text-right">
-                        <p className="text-sm text-green-600">
-                          Meilleure offre
-                        </p>
+                        <p className="text-sm text-green-600">Best offer</p>
                         <p className="text-2xl font-bold text-green-700">
                           {calculateTotal(
                             bestOffer.oceanFreight,

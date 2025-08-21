@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../assets/styles/Login.css";
+import "../assets/images/LogoRoxcel.png";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Mail, Lock, AlertCircle, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";

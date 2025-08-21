@@ -1,24 +1,24 @@
 import { useState } from "react";
-import "../assets/styles/Freight.css";
+import "../assets/styles/Region.css";
 import { useNavigate } from "react-router-dom";
 
-const FreightPage = () => {
+const RegionPage = () => {
   const [currentPage, setCurrentPage] = useState();
   const navigate = useNavigate();
   const countries = [
     {
       id: "benelux-germany",
-      name: "ANTWERP - HAMBURG - ROTTERDAM",
+      name: "Belgium - Germany",
       clickable: true,
     },
     {
       id: "spain",
-      name: "SPAIN",
+      name: "Spain",
       clickable: true,
     },
     {
       id: "usa",
-      name: "USA",
+      name: "United States of America",
       clickable: true,
     },
   ];
@@ -52,11 +52,11 @@ const FreightPage = () => {
                 d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 0c2.5 2.5 4 6 4 10s-1.5 7.5-4 10m0-20c-2.5 2.5-4 6-4 10s1.5 7.5 4 10m-8-10h16"
               />
             </svg>
-            <h1>Sélectionnez votre région</h1>
+            <h1>Select your region</h1>
           </div>
 
           <p className="app-subtitle">
-            Choisissez une destination pour accéder aux options de transport
+            Choose a destination to access transport options
           </p>
         </header>
         <ul className="countries-list">
@@ -118,4 +118,4 @@ const FreightPage = () => {
   );
 };
 
-export default FreightPage;
+export default RegionPage;
