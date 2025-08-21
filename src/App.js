@@ -21,46 +21,11 @@ function App() {
         <Route path="/" element={<RegionPage />} />
         {/* <Route path="/login" element={<LoginForm />} />
         <Route path="/register" element={<RegisterPage />} /> */}
-        <Route
-          path="/freight"
-          element={
-            <ProtectedRoute>
-              <RegionPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/transport"
-          element={
-            <ProtectedRoute>
-              <TransportChoicePage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/usine"
-          element={
-            <ProtectedRoute>
-              <UsinePage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/calcul"
-          element={
-            <ProtectedRoute>
-              <CalculPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/historique"
-          element={
-            <ProtectedRoute>
-              <HistoriquePage />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/transport" element={<TransportChoicePage />} />
+        <Route path="/usine" element={<UsinePage />} />
+        <Route path="/calcul" element={<CalculPage />} />
+        <Route path="/historique" element={<HistoriquePage />} />
+
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
