@@ -7,7 +7,7 @@ const RegionPage = () => {
   const navigate = useNavigate();
   const countries = [
     {
-      id: "benelux-germany",
+      id: "belgium-germany",
       name: "Belgium - Germany",
       clickable: true,
     },
@@ -21,10 +21,28 @@ const RegionPage = () => {
       name: "United States of America",
       clickable: true,
     },
+    {
+      id: "slovenia",
+      name: "Slovenia",
+      clickable: true,
+    },
+    {
+      id: "italy",
+      name: "Italy",
+      clickable: false,
+    },
+    {
+      id: "france",
+      name: "France",
+      clickable: false,
+    },
   ];
 
   const handleCountryClick = (country) => {
     if (country.clickable) {
+      // Sauvegarder le countryId dans localStorage pour la persistance
+
+      localStorage.setItem("selectedCountryId", country.id);
       setCurrentPage("transport");
       navigate("/transport", { state: { countryId: country.id } });
     }
@@ -52,7 +70,7 @@ const RegionPage = () => {
                 d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 0c2.5 2.5 4 6 4 10s-1.5 7.5-4 10m0-20c-2.5 2.5-4 6-4 10s1.5 7.5 4 10m-8-10h16"
               />
             </svg>
-            <h1>Select your region</h1>
+            <h1>Select your loading port</h1>
           </div>
 
           <p className="app-subtitle">

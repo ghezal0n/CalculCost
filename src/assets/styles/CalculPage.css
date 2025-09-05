@@ -1,7 +1,22 @@
+/* Container principal - utilise toute la largeur */
+.main-container {
+  width: 100%;
+  min-height: 100vh;
+  padding: 0;
+  margin: 0;
+}
+
+.max-w-7xl {
+  width: 100%;
+  max-width: none; /* Supprime la limite de largeur */
+  box-sizing: border-box;
+}
+
 /* Header */
 .header {
   text-align: center;
   margin-bottom: 32px;
+  width: 100%;
 }
 
 .header-title {
@@ -33,26 +48,56 @@
 .header-mode-description {
   color: #000000;
   font-size: 1.2rem;
-  max-width: 600px;
+  max-width: 100%;
   margin: 0 auto;
 }
 
 .header-region-description {
   color: #2563eb;
   font-size: 1.2rem;
-  max-width: 600px;
+  max-width: 100%;
   margin: 0 auto;
 }
 
-/* Grid Layout */
-.grid {
+.proposals-grid {
   display: grid;
-  gap: 32px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  width: 100%;
+  margin-top: 2rem;
 }
 
-@media (min-width: 1024px) {
+/* Grid Layout - responsive et pleine largeur */
+.grid {
+  display: grid;
+  gap: 2rem;
+  width: 100%;
+}
+
+/* Grid pour le formulaire de recherche - les selects prennent l'espace, le bouton reste petit */
+.search-form-grid {
+  display: grid;
+  grid-template-columns: 2fr 2fr;
+  gap: 2rem;
+  align-items: end;
+  width: 100%;
+}
+
+/* Responsive pour tablettes et mobiles */
+@media (max-width: 1024px) {
+  .search-form-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .max-w-7xl {
+    padding: 1rem;
+  }
+
   .grid {
-    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
   }
 }
 
@@ -63,12 +108,14 @@
   margin-right: 4px;
 }
 
-/* Cards */
+/* Cards - utilise toute la largeur disponible */
 .card {
   background: white;
   border-radius: 12px;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   padding: 24px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .card-title {
@@ -85,6 +132,41 @@
   height: 24px;
   margin-right: 8px;
   color: #2563eb;
+}
+
+/* Styles pour les logos des transporteurs */
+.carrier-logo {
+  height: 25px !important;
+  width: 45px !important;
+  object-fit: contain !important;
+  object-position: center !important;
+}
+
+/* Version encore plus petite si nécessaire */
+.carrier-logo-small {
+  height: 12px !important;
+  width: 24px !important;
+  object-fit: contain !important;
+  object-position: center !important;
+}
+
+/* Version très petite */
+.carrier-logo-xs {
+  height: 10px !important;
+  width: 20px !important;
+  object-fit: contain !important;
+  object-position: center !important;
+}
+
+/* Container pour logo + nom de carrier sans espaces à droite */
+.carrier-info {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 8px !important;
+  margin-top: 8px !important;
+  width: fit-content !important;
+  margin-left: auto !important;
 }
 
 /* Form Styles */
@@ -116,6 +198,7 @@
   font-size: 1.2rem;
   transition: all 0.2s;
   background: white;
+  box-sizing: border-box;
 }
 
 .form-input:focus,
@@ -132,16 +215,38 @@
 .label-icon-text {
   display: flex;
   align-items: center;
-  gap: 1px; /* espace entre icône et texte */
+  gap: 8px;
 }
 
+/* Grid pour les proposals - 2 par ligne sur écrans larges */
+.proposals-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  width: 100%;
+  margin-top: 2rem;
+}
+
+/* Responsive pour les proposals */
+@media (max-width: 1200px) {
+  .proposals-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+/* Assurer que les proposals ont la même hauteur */
 .proposal-card {
   background: white;
   border-radius: 12px;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   padding: 24px;
   border-left: 4px solid #3b82f6;
-  margin-bottom: 24px;
+  width: 100%;
+  box-sizing: border-box;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
 }
 
 .proposal-header {
@@ -149,6 +254,8 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .proposal-title {
@@ -169,22 +276,16 @@
 .carrier-badge {
   background: #dbeafe;
   color: #1e40af;
-  padding: 4px 12px;
+  padding: 8px 16px;
   border-radius: 9999px;
   font-size: 1rem;
   font-weight: 600;
-}
-
-.calculation-container {
-  overflow: hidden;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  margin-bottom: 24px;
+  white-space: nowrap;
 }
 
 /* Button */
 .btn {
-  width: 100%;
+  min-width: 200px;
   padding: 12px 24px;
   border-radius: 8px;
   font-weight: 600;
@@ -195,6 +296,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
 }
 
 .btn-primary {
@@ -207,7 +309,7 @@
   transform: translateY(-1px);
 }
 
-.btn-disabled {
+.btn:disabled {
   background: #9ca3af;
   cursor: not-allowed;
 }
@@ -216,20 +318,21 @@
   width: 20px;
   height: 20px;
   margin-right: 8px;
-  vertical-align: top;
 }
 
-/* Results Header Container */
+/* Results Header Container - pleine largeur */
 .results-header {
   margin-top: 24px;
   margin-bottom: 24px;
-  padding: 20px;
+  padding: 24px;
   background: white;
   border-radius: 12px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  box-sizing: border-box;
 }
 
-/* Flex container for header layout */
+/* Flex utilities */
 .flex {
   display: flex;
 }
@@ -242,10 +345,15 @@
   justify-content: space-between;
 }
 
-/* Typography classes */
+/* Typography */
 .text-2xl {
   font-size: 1.5rem;
   line-height: 2rem;
+}
+
+.text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
 }
 
 .text-sm {
@@ -257,7 +365,7 @@
   font-weight: 700;
 }
 
-/* Color classes */
+/* Colors */
 .text-gray-800 {
   color: #1f2937;
 }
@@ -279,32 +387,11 @@
   text-align: right;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .results-header .flex {
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .text-right {
-    text-align: left;
-  }
-
-  .results-header .text-2xl {
-    font-size: 1.25rem;
-    line-height: 1.75rem;
-  }
+.text-center {
+  text-align: center;
 }
 
-/* Route Info */
-.route-info {
-  background: #eff6ff;
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 24px;
-}
-
-/* Table */
+/* Table - responsive et pleine largeur */
 .calculation-table {
   width: 100%;
   border-collapse: collapse;
@@ -312,11 +399,18 @@
   overflow: hidden;
   border: 1px solid #e5e7eb;
   margin-bottom: 24px;
+  box-sizing: border-box;
+}
+
+.calculation-table table {
+  width: 100%;
+  margin: 0 auto;
 }
 
 .calculation-table td {
-  padding: 12px 16px;
+  padding: 12px 24px; /* Augmenté le padding horizontal */
   border-bottom: 1px solid #e5e7eb;
+  vertical-align: middle;
 }
 
 .calculation-table tr:nth-child(odd) {
@@ -330,16 +424,22 @@
 .table-label {
   font-size: 0.875rem;
   color: #1f2937;
+  width: 65%; /* Augmenté pour plus d'espace pour les labels longs */
+  text-align: left;
+  padding-right: 40px; /* Espace supplémentaire à droite du label */
 }
 
 .table-value {
   text-align: right;
   font-weight: 600;
   color: #1f2937;
+  width: 35%;
+  padding-left: 20px; /* Espace supplémentaire à gauche de la valeur */
+  white-space: nowrap; /* Empêche le retour à la ligne des valeurs */
 }
 
 .table-total-container {
-  background: #f0fdf4;
+  background: #f0fdf4 !important;
   border-top: 2px solid #22c55e;
 }
 
@@ -347,6 +447,9 @@
   font-size: 1rem;
   font-weight: bold;
   color: #166534;
+  width: 70%;
+  text-align: left;
+  padding-right: 16px;
 }
 
 .table-total-value {
@@ -354,16 +457,22 @@
   font-size: 1rem;
   font-weight: bold;
   color: #166534;
+  width: 30%;
+  padding-left: 16px;
+  white-space: nowrap;
 }
 
 .table-ton-container {
-  background: #eff6ff;
+  background: #eff6ff !important;
 }
 
 .table-ton-label {
   font-size: 1rem;
   font-weight: bold;
   color: #1e40af;
+  width: 70%;
+  text-align: left;
+  padding-right: 16px;
 }
 
 .table-ton-value {
@@ -371,6 +480,9 @@
   font-size: 1rem;
   font-weight: bold;
   color: #1e40af;
+  width: 30%;
+  padding-left: 16px;
+  white-space: nowrap;
 }
 
 /* Final Price Display */
@@ -378,40 +490,38 @@
   background: linear-gradient(135deg, #dcfce7 0%, #d1fae5 100%);
   border-radius: 8px;
   padding: 24px;
+
   border: 2px solid #86efac;
-  text-align: center;
+
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.final-price-label {
-  font-size: 0.875rem;
+.green-label {
+  font-size: 1rem;
   color: #166534;
   font-weight: 500;
   margin-bottom: 8px;
 }
 
-.final-price-amount {
-  font-size: 2.5rem;
-  font-weight: bold;
-  color: #166534;
-}
-
-.final-price-subtitle {
-  font-size: 1.125rem;
-  color: #166534;
-  margin-top: 8px;
-}
-/* Container pour les calculs avec espacement vertical */
+/* Spacing utilities */
 .space-y-6 > *:not(:first-child) {
   margin-top: 24px;
 }
 
-/* Message "Aucune route disponible" */
+.mt-1 {
+  margin-top: 0.25rem;
+}
+
+/* No routes message */
 .no-routes-message {
   text-align: center;
   padding: 48px 24px;
   background: white;
   border-radius: 12px;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .no-routes-icon {
@@ -436,21 +546,57 @@
   line-height: 1.5;
 }
 
-/* Responsive pour mobile */
+/* Responsive pour écrans larges */
+@media (min-width: 1400px) {
+  .max-w-7xl {
+    padding: 3rem;
+  }
+
+  .proposal-card {
+    padding: 32px;
+  }
+
+  .results-header {
+    padding: 32px;
+  }
+}
+
+/* Responsive pour mobiles */
 @media (max-width: 768px) {
-  .no-routes-message {
-    padding: 32px 16px;
+  .calculation-table td {
+    padding: 8px 16px;
   }
 
-  .no-routes-icon {
-    font-size: 3rem;
+  .table-label,
+  .table-total-label,
+  .table-ton-label {
+    font-size: 0.8rem;
+    padding-right: 20px;
+    width: 60%;
   }
 
-  .no-routes-title {
-    font-size: 1.125rem;
+  .table-value,
+  .table-total-value,
+  .table-ton-value {
+    font-size: 0.9rem;
+    padding-left: 10px;
+    width: 40%;
+  }
+}
+
+/* Pour les écrans très petits */
+@media (max-width: 480px) {
+  .table-label,
+  .table-total-label,
+  .table-ton-label {
+    width: 55%;
+    padding-right: 15px;
   }
 
-  .no-routes-description {
-    font-size: 0.875rem;
+  .table-value,
+  .table-total-value,
+  .table-ton-value {
+    width: 45%;
+    padding-left: 5px;
   }
 }

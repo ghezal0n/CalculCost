@@ -73,6 +73,8 @@ body {
 
 .item-content {
   padding: 24px;
+  max-width: 500px;
+  min-width: 400px;
 }
 
 .item-header {

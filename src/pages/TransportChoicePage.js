@@ -72,8 +72,13 @@ const choices = [
   {
     key: "fob-container",
     title: "FOB",
-    description: "",
-    features: [],
+    description: "Free On Board delivery",
+    features: [
+      "Container ready for export",
+      "Maximum efficiency",
+      "Streamlined process",
+      "Cost-effective solution",
+    ],
     svgPaths: [
       "M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4",
     ],
@@ -85,9 +90,20 @@ const TransportChoicePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const countryId = location.state?.countryId || null;
+  // Récupérer le countryId depuis location.state ou localStorage
+  const countryId =
+    location.state?.countryId ||
+    localStorage.getItem("selectedCountryId") ||
+    null;
+  // Sauvegarder dans localStorage si disponible dans location.state
+  useEffect(() => {
+    if (location.state?.countryId) {
+      localStorage.setItem("selectedCountryId", location.state.countryId);
+    }
+  }, [location.state?.countryId]);
+
   const filteredChoices =
-    countryId === "spain" || countryId === "usa"
+    countryId === "spain" || countryId === "usa" || countryId === "slovenia"
       ? choices.filter(
           (c) => c.key === "fca-port-truck" || c.key === "fob-container"
         )
@@ -183,12 +199,14 @@ const TransportChoicePage = () => {
           Click on a transport mode to access the calculator directly
           {countryId && (
             <p className="header-region-description">
-              Selected region:{" "}
+              Incoterm selected :{" "}
               {countryId === "usa"
                 ? "United States"
                 : countryId === "spain"
                 ? "Spain"
-                : "Benelux-Germany"}
+                : countryId === "slovenia"
+                ? "Slovenia"
+                : "Belgium - Germany"}
             </p>
           )}
         </p>

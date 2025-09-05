@@ -2,14 +2,34 @@ import React, { useState, useEffect } from "react";
 import { Ship, Calculator, MapPin } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import "../assets/styles/CalculPage.css";
-import { freightData, spainFreightData, usaFreightData } from "./Data.js";
+import {
+  freightData,
+  koperFreightData,
+  spainFreightData,
+  usaFreightData,
+} from "./Data.js";
+import ARKAS from "../assets/images/ARKAS-Line.webp";
+import CMA_CGM from "../assets/images/CMA_CGM.png";
+import Corporation from "../assets/images/Corporation.png";
+import COSCO from "../assets/images/COSCO.png";
+import Evergreen from "../assets/images/Evergreen.svg";
+import Grimaldi from "../assets/images/Grimaldi_Group.png";
+import HapagLloyd from "../assets/images/hapag-lloyd.svg";
+import IgnazioMessina from "../assets/images/ignazio_messina.jpeg";
+import Maersk from "../assets/images/Maersk.png";
+import MSC from "../assets/images/MSC.png";
+import ONE from "../assets/images/ONE.png";
+import OOCL from "../assets/images/OOCL.png";
+import SwireShipping from "../assets/images/Swire Shipping.jpg";
+import YangMing from "../assets/images/Yang Ming.jpg";
+import ZIM from "../assets/images/ZIM.png";
 
 const CalculPage = () => {
   const location = useLocation();
-  const countryId = location.state?.countryId || "benelux-germany"; // Par défaut benelux-germany
+  const countryId = location.state?.countryId || "belgium-germany";
 
   const [formData, setFormData] = useState({
-    origin: countryId === "benelux-germany" ? "Antwerp" : "",
+    origin: "",
     destination: "",
     carrier: "",
     oceanFreight: "",
@@ -20,6 +40,36 @@ const CalculPage = () => {
   const [availableRoutes, setAvailableRoutes] = useState([]);
   const [showCalculations, setShowCalculations] = useState(false);
 
+  const carrierLogos = {
+    ARKAS: ARKAS,
+    "CMA CGM": CMA_CGM,
+    CMA: CMA_CGM,
+    Corporation: Corporation,
+    COSCO: COSCO,
+    Cosco: COSCO,
+    Evergreen: Evergreen,
+    EVE: Evergreen,
+    Grimaldi: Grimaldi,
+    GRIMALDI: Grimaldi,
+    "Hapag-Lloyd": HapagLloyd,
+    HAPAG: HapagLloyd,
+    Hapag: HapagLloyd,
+    "HAPAG AT": HapagLloyd,
+    "Ignazio Messina": IgnazioMessina,
+    Maersk: Maersk,
+    MAERSK: Maersk,
+    MESSINA: IgnazioMessina,
+    MSC: MSC,
+    "MSC KOPER": MSC,
+    "MSC AT": MSC,
+    "MSC KP": MSC,
+    "Swire Shipping": SwireShipping,
+    YML: YangMing,
+    ONE: ONE,
+    OOCL: OOCL,
+    ZIM: ZIM,
+  };
+
   const getCurrency = () => {
     return countryId === "usa" ? "$" : "€";
   };
@@ -27,7 +77,6 @@ const CalculPage = () => {
   // Fonction pour créer les données pour l'Espagne
   function getSpainFreightData() {
     const spainData = [];
-
     spainFreightData.forEach((route) => {
       spainData.push({
         ...route,
@@ -37,12 +86,25 @@ const CalculPage = () => {
     return spainData;
   }
 
+  function getKoperFreightData() {
+    const koperData = [];
+    koperFreightData.forEach((route) => {
+      koperData.push({
+        ...route,
+        origin: "Koper",
+      });
+    });
+    return koperData;
+  }
+
   // Sélectionner les données selon le pays
   const getCurrentFreightData = () => {
     if (countryId === "spain") {
       return getSpainFreightData();
     } else if (countryId === "usa") {
       return usaFreightData;
+    } else if (countryId === "slovenia") {
+      return getKoperFreightData();
     }
     return freightData; //benelux-germany
   };
@@ -88,20 +150,45 @@ const CalculPage = () => {
     },
   };
 
+  const fixedRatesKoper = {
+    thcOrigin: 150.0,
+    stowage: 400.0,
+    preCarriageNiederauer: 500.0,
+    tonWeight: 24,
+  };
+
   // Extraire les valeurs uniques
   const origins = [...new Set(currentFreightData.map((item) => item.origin))];
 
+  // Effet pour définir l'origine par défaut selon le pays
   useEffect(() => {
-    if (countryId === "spain" && origins.length === 1 && !formData.origin) {
+    let defaultOrigin = "";
+
+    if (countryId === "belgium-germany") {
+      defaultOrigin = "Antwerp";
+    } else if (countryId === "spain" && origins.length === 1) {
+      defaultOrigin = origins[0];
+    } else if (countryId === "slovenia" && origins.includes("Koper")) {
+      defaultOrigin = "Koper";
+    }
+
+    if (defaultOrigin && !formData.origin) {
       setFormData((prev) => ({
         ...prev,
-        origin: origins[0],
+        origin: defaultOrigin,
       }));
     }
-  }, [origins, formData.origin]);
+  }, [origins, countryId, formData.origin]);
+
   const destinations = [
     ...new Set(currentFreightData.map((item) => item.destination)),
   ].sort();
+
+  useEffect(() => {
+    if (formData.origin && formData.destination) {
+      searchRoutes();
+    }
+  }, [formData.origin, formData.destination]);
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({
@@ -149,6 +236,8 @@ const CalculPage = () => {
       fixedRates = fixedRatesSpain;
     } else if (countryId === "usa") {
       fixedRates = fixedRatesUSA[origin] || fixedRatesUSA["Savannah"];
+    } else if (countryId === "slovenia") {
+      fixedRates = fixedRatesKoper;
     } else if (origin === "Hamburg") {
       fixedRates = fixedRatesHamburg;
     } else {
@@ -159,7 +248,7 @@ const CalculPage = () => {
     const isHamburg = origin === "Hamburg";
 
     let calculation = {
-      oceanFreight,
+      oceanFreight: Number(oceanFreight) || 0,
       totalFobPreCarrier: 695,
       thcOrigin: fixedRates.thcOrigin,
       tonWeight: fixedRates.tonWeight,
@@ -169,8 +258,8 @@ const CalculPage = () => {
     if (calculationType === "fob-container") {
       calculation = {
         ...calculation,
-        allInByContainer: oceanFreight,
-        allInByTon: oceanFreight / fixedRates.tonWeight,
+        allInByContainer: calculation.oceanFreight,
+        allInByTon: calculation.oceanFreight / fixedRates.tonWeight,
         calculationType: "fob-container",
       };
       return calculation;
@@ -182,16 +271,18 @@ const CalculPage = () => {
         calculation = {
           ...calculation,
           handlingInOutDrayage: fixedRates.handlingInOutDrayage,
-          allInByContainer: oceanFreight + fixedRates.handlingInOutDrayage,
+          allInByContainer:
+            calculation.oceanFreight + fixedRates.handlingInOutDrayage,
         };
       } else if (origin === "New Orleans") {
         calculation = {
           ...calculation,
           handlingInOutDrayage: fixedRates.handlingInOutDrayage,
           drayagePortsOfAmerica: fixedRates.drayagePortsOfAmerica,
-          allInByContainer: oceanFreight + fixedRates.handlingInOutDrayage,
+          allInByContainer:
+            calculation.oceanFreight + fixedRates.handlingInOutDrayage,
           allInByContainerWithPorts:
-            oceanFreight +
+            calculation.oceanFreight +
             fixedRates.handlingInOutDrayage +
             fixedRates.drayagePortsOfAmerica,
         };
@@ -200,7 +291,7 @@ const CalculPage = () => {
           ...calculation,
           handlingInOutDrayagesChassis: fixedRates.handlingInOutDrayagesChassis,
           allInByContainer:
-            oceanFreight + fixedRates.handlingInOutDrayagesChassis,
+            calculation.oceanFreight + fixedRates.handlingInOutDrayagesChassis,
         };
       }
       calculation.allInByTon =
@@ -214,9 +305,37 @@ const CalculPage = () => {
       calculation = {
         ...calculation,
         fobCharges: 695,
-        allInByContainer: oceanFreight + 695,
-        allInByTon: (oceanFreight + 695) / fixedRates.tonWeight,
+        allInByContainer: calculation.oceanFreight + 695,
+        allInByTon: (calculation.oceanFreight + 695) / fixedRates.tonWeight,
         calculationType: "spain-fca-port-truck",
+      };
+      return calculation;
+    }
+
+    // Gestion spéciale pour la Slovénie
+    if (countryId === "slovenia") {
+      if (selectedFCAMode === "fca-port-truck") {
+        calculation = {
+          ...calculation,
+          fobCharges: 695,
+          allInByContainer: calculation.oceanFreight + 695,
+          allInByTon: (calculation.oceanFreight + 695) / fixedRates.tonWeight,
+          calculationType: "slovenia-fca-port-truck",
+        };
+        return calculation;
+      }
+      // Pour les autres modes FCA en Slovénie
+      calculation = {
+        ...calculation,
+        allInByContainer:
+          calculation.oceanFreight + fixedRates.thcOrigin + fixedRates.stowage,
+        allInByTon:
+          (calculation.oceanFreight +
+            fixedRates.thcOrigin +
+            fixedRates.stowage) /
+          fixedRates.tonWeight,
+        calculationType: "slovenia",
+        stowage: fixedRates.stowage,
       };
       return calculation;
     }
@@ -227,7 +346,7 @@ const CalculPage = () => {
         ...calculation,
         preCarriageNiederauer: fixedRates.preCarriageNiederauer,
         allInByContainer:
-          oceanFreight +
+          calculation.oceanFreight +
           fixedRates.thcOrigin +
           fixedRates.preCarriageNiederauer,
       };
@@ -235,27 +354,26 @@ const CalculPage = () => {
       calculation = {
         ...calculation,
         preCarriageNiederauer: fixedRates.preCarriageNiederauer,
-        allInByContainer: oceanFreight + fixedRates.thcOrigin,
+        allInByContainer: calculation.oceanFreight + fixedRates.thcOrigin,
       };
     } else if (calculationType === "mill-truck" && origin === "Antwerp") {
       //FCA Mill by Truck (Antwerp) : Ocean freight + THC Origin + Container Pre-collection + Container discharge + Container stuffing + Pre Carriage Düren/Kreuzau
-
       calculation = {
         ...calculation,
         containerPreCollection: fixedRates.containerPreCollection,
         stowage: fixedRates.stowage,
         preCarriageDurenKreuzau: fixedRates.preCarriageDurenKreuzau,
         allInByContainer:
-          oceanFreight +
+          calculation.oceanFreight +
           fixedRates.thcOrigin +
           fixedRates.containerPreCollection +
           fixedRates.stowage +
           fixedRates.preCarriageDurenKreuzau,
       };
     } else {
-      // Pour tous les autres cas : Ocean freight + THC Origin + Container Pre-collection + Container discharge + Container stuffing
+      // Pour tous les autres cas
       const containerPreCollection =
-        countryId === "spain" || isHamburg
+        countryId === "spain" || countryId === "slovenia" || isHamburg
           ? 0
           : fixedRatesAntwerp.containerPreCollection;
 
@@ -266,11 +384,13 @@ const CalculPage = () => {
         stowage: fixedRates.stowage,
         allInByContainer:
           containerPreCollection > 0
-            ? oceanFreight +
+            ? calculation.oceanFreight +
               fixedRates.thcOrigin +
               containerPreCollection +
               fixedRates.stowage
-            : oceanFreight + fixedRates.thcOrigin + fixedRates.stowage,
+            : calculation.oceanFreight +
+              fixedRates.thcOrigin +
+              fixedRates.stowage,
       };
     }
 
@@ -313,11 +433,11 @@ const CalculPage = () => {
                 </td>
               </tr>
 
-              {/* Affichage conditionnel selon le type de calcul - FOB simplifié */}
+              {/* Affichage conditionnel selon le type de calcul */}
               {calculation.calculationType ===
-              "fob-container" ? null : calculation.calculationType === // Pour FOB - seulement Ocean freight (déjà affiché ci-dessus), pas d'autres lignes
+              "fob-container" ? null : calculation.calculationType ===
                 "mill-container" ? (
-                // Pour FCA Mill in Container
+                // Pour FCA Port in Container
                 <>
                   <tr>
                     <td className="table-label">THC Origin</td>
@@ -359,7 +479,6 @@ const CalculPage = () => {
                 </tr>
               ) : calculation.calculationType === "mill-truck" &&
                 route.origin === "Antwerp" ? (
-                // Pour FCA Mill by Truck (uniquement pour Antwerp)
                 <>
                   <tr>
                     <td className="table-label">THC Origin</td>
@@ -410,6 +529,19 @@ const CalculPage = () => {
                   </tr>
                 </>
               ) : calculation.calculationType === "spain-fca-port-truck" ? (
+                <>
+                  <tr>
+                    <td className="table-label">Container FOB Charges</td>
+                    <td className="table-value">
+                      {calculation.fobCharges.toLocaleString("fr-FR", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}{" "}
+                      {getCurrency()}
+                    </td>
+                  </tr>
+                </>
+              ) : calculation.calculationType === "slovenia-fca-port-truck" ? (
                 <>
                   <tr>
                     <td className="table-label">Container FOB Charges</td>
@@ -494,6 +626,32 @@ const CalculPage = () => {
                     </tr>
                   )}
                 </>
+              ) : countryId === "slovenia" ? (
+                // Affichage pour la Slovénie
+                <>
+                  <tr>
+                    <td className="table-label">THC Origin</td>
+                    <td className="table-value">
+                      {calculation.thcOrigin.toLocaleString("fr-FR", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}{" "}
+                      {getCurrency()}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="table-label">
+                      Container discharge + Container stuffing
+                    </td>
+                    <td className="table-value">
+                      {calculation.stowage.toLocaleString("fr-FR", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}{" "}
+                      {getCurrency()}
+                    </td>
+                  </tr>
+                </>
               ) : (
                 // Pour tous les autres cas
                 <>
@@ -569,14 +727,16 @@ const CalculPage = () => {
               })}{" "}
               {getCurrency()}
             </p>
-            <p className="text-sm text-green-600 mt-1">
-              That is{" "}
-              {calculation.allInByTon.toLocaleString("fr-FR", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}{" "}
-              {getCurrency()} per ton
-            </p>
+            {route.freetime && (
+              <p className="text-m text-black-600 mt-1">
+                ⏱️ Freetime: {route.freetime}
+              </p>
+            )}
+            {route.validUntil && (
+              <p className="text-m text-red-600 mt-1">
+                📅 Valid until: {route.validUntil}
+              </p>
+            )}
           </div>
         </div>
       </div>
@@ -600,7 +760,7 @@ const CalculPage = () => {
 
   return (
     <div className="main-container">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl">
         {/* Header */}
         <div className="header mb-8">
           <div className="header-title">
@@ -623,7 +783,9 @@ const CalculPage = () => {
                 ? " United States"
                 : countryId === "spain"
                 ? " Spain"
-                : " Benelux-Germany"}
+                : countryId === "slovenia"
+                ? " Slovenia"
+                : " Belgium - Germany"}
             </p>
           )}
         </div>
@@ -635,7 +797,7 @@ const CalculPage = () => {
             Search for offers
           </h2>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="search-form-grid">
             {/* Origine */}
             <div>
               <label className="form-label">
@@ -682,24 +844,6 @@ const CalculPage = () => {
                 ))}
               </select>
             </div>
-
-            {/* Bouton Rechercher */}
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "flex-end",
-              }}
-            >
-              <button
-                onClick={searchRoutes}
-                disabled={!isFormValid()}
-                className={`btn ${isFormValid() ? "btn-primary" : ""}`}
-              >
-                <Calculator className="icon" />
-                Validate
-              </button>
-            </div>
           </div>
         </div>
 
@@ -728,12 +872,13 @@ const CalculPage = () => {
                       <p className="text-gray-600">
                         {availableRoutes.length} offer
                         {availableRoutes.length > 1 ? "s" : ""} available
-                        {availableRoutes.length > 1 ? "s" : ""}
                       </p>
                     </div>
                     {bestOffer && (
                       <div className="text-right">
-                        <p className="text-sm text-green-600">Best offer</p>
+                        <p className="text-xl font-semibold text-green-600 mb-2">
+                          Best offer
+                        </p>
                         <p className="text-2xl font-bold text-green-700">
                           {calculateTotal(
                             bestOffer.oceanFreight,
@@ -744,16 +889,25 @@ const CalculPage = () => {
                           })}{" "}
                           {getCurrency()}
                         </p>
-                        <p className="text-sm text-green-600">
-                          {bestOffer.carrier}
-                        </p>
+                        <div className="carrier-info">
+                          {carrierLogos[bestOffer.carrier] && (
+                            <img
+                              src={carrierLogos[bestOffer.carrier]}
+                              alt={bestOffer.carrier}
+                              className="carrier-logo"
+                            />
+                          )}
+                          <span className="text-xs font-medium text-green-600 whitespace-nowrap">
+                            {bestOffer.carrier}
+                          </span>
+                        </div>
                       </div>
                     )}
                   </div>
                 </div>
 
                 {/* Propositions */}
-                <div className="grid gap-6">
+                <div className="proposals-grid">
                   {availableRoutes
                     .sort(
                       (a, b) =>
