@@ -300,19 +300,48 @@ body {
 }
 
 /* Responsive Design */
+/* === OPTIMISATIONS MOBILE POUR TRANSPORT CHOICE === */
+
 @media (max-width: 768px) {
-  .header-title h1 {
-    font-size: 2rem;
+  .container {
+    padding: 16px 1rem;
   }
 
+  .header-title h1 {
+    font-size: 2rem;
+    text-align: center;
+  }
+
+  .ship-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .header-subtitle {
+    font-size: 1.125rem;
+    text-align: center;
+    padding: 0 16px;
+  }
+
+  .header-description,
+  .header-region-description {
+    font-size: 1rem;
+    text-align: center;
+    padding: 0 16px;
+    line-height: 1.5;
+  }
+
+  /* Grille de choix mobile */
   .choices-grid {
     flex-direction: column;
+    gap: 20px;
     align-items: center;
   }
 
   .choice-card {
     width: 100%;
-    max-width: 500px;
+    max-width: 100%;
+    min-width: auto;
     padding: 24px 20px;
   }
 
@@ -327,52 +356,55 @@ body {
     height: 28px;
   }
 
+  .choice-title {
+    font-size: 1.25rem;
+    text-align: center;
+  }
+
+  .choice-description {
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  .choice-features {
+    text-align: left;
+    max-width: 280px;
+    margin: 0 auto;
+  }
+
+  .choice-features li {
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  /* Section CTA mobile */
   .cta-section {
     padding: 24px 20px;
+    border-radius: 12px;
+  }
+
+  .cta-title {
+    font-size: 1.25rem;
+    text-align: center;
+  }
+
+  .cta-description {
+    font-size: 14px;
+    text-align: center;
   }
 
   .proceed-btn {
     width: 100%;
-    padding: 14px 24px;
-    font-size: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .container {
-    padding: 16px 1rem;
+    padding: 16px 24px;
+    font-size: 16px;
+    border-radius: 10px;
+    min-height: 48px;
   }
 
-  .header {
-    margin-bottom: 32px;
-  }
-
-  .header-title h1 {
-    font-size: 1.75rem;
-  }
-
-  .header-subtitle {
-    font-size: 1.125rem;
-  }
-
-  .header-description {
-    font-size: 0.875rem;
-  }
-
-  .choice-card {
-    padding: 20px 16px;
-    min-width: auto;
-  }
-
-  .choice-title {
-    font-size: 1.25rem;
-  }
-
-  .choice-description {
-    font-size: 0.875rem;
-  }
-
-  .choices-grid {
-    margin-bottom: 32px;
+  .selected-choice {
+    padding: 16px;
+    border-radius: 10px;
+    text-align: center;
   }
 }

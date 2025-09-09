@@ -155,3 +155,111 @@ body {
   font-weight: 500;
   margin-top: 8px;
 }
+
+@media (max-width: 768px) {
+  .app-container {
+    padding: 16px;
+  }
+
+  .main-container {
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .app-header {
+    margin-bottom: 32px;
+    text-align: center;
+  }
+
+  .header-title h1 {
+    font-size: 2rem;
+    margin-left: 8px;
+  }
+
+  .globe-icon,
+  .factory-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .app-title {
+    font-size: 2rem;
+    text-align: center;
+  }
+
+  .app-subtitle {
+    font-size: 1rem;
+    padding: 0 16px;
+    text-align: center;
+  }
+
+  /* Liste pays mobile */
+  .countries-list {
+    gap: 12px;
+  }
+
+  .country-item {
+    border-radius: 12px;
+  }
+
+  .country-item.clickable:hover {
+    transform: translateX(2px);
+  }
+
+  .item-content {
+    padding: 20px;
+    min-width: auto;
+    max-width: 100%;
+  }
+
+  .country-name {
+    font-size: 1.125rem;
+    text-align: left;
+  }
+
+  .item-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .arrow-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .access-link,
+  .coming-soon {
+    font-size: 14px;
+    margin-top: 8px;
+  }
+
+  .external-arrow {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-header {
+    margin-bottom: 24px;
+  }
+
+  .header-title h1,
+  .app-title {
+    font-size: 1.75rem;
+  }
+
+  .globe-icon,
+  .factory-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .item-content {
+    padding: 16px;
+  }
+
+  .country-name {
+    font-size: 1rem;
+  }
+}

@@ -124,7 +124,7 @@ const RegionPage = () => {
 
                 {!country.clickable && (
                   <div className="coming-soon">
-                    <span>Bientôt disponible</span>
+                    <span>Coming soon</span>
                   </div>
                 )}
               </div>

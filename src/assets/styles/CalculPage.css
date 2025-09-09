@@ -59,14 +59,6 @@
   margin: 0 auto;
 }
 
-.proposals-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
-  width: 100%;
-  margin-top: 2rem;
-}
-
 /* Grid Layout - responsive et pleine largeur */
 .grid {
   display: grid;
@@ -81,24 +73,6 @@
   gap: 2rem;
   align-items: end;
   width: 100%;
-}
-
-/* Responsive pour tablettes et mobiles */
-@media (max-width: 1024px) {
-  .search-form-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .max-w-7xl {
-    padding: 1rem;
-  }
-
-  .grid {
-    gap: 1rem;
-  }
 }
 
 .mappin-icon {
@@ -142,7 +116,6 @@
   object-position: center !important;
 }
 
-/* Version encore plus petite si nécessaire */
 .carrier-logo-small {
   height: 12px !important;
   width: 24px !important;
@@ -150,7 +123,6 @@
   object-position: center !important;
 }
 
-/* Version très petite */
 .carrier-logo-xs {
   height: 10px !important;
   width: 20px !important;
@@ -225,14 +197,6 @@
   gap: 2rem;
   width: 100%;
   margin-top: 2rem;
-}
-
-/* Responsive pour les proposals */
-@media (max-width: 1200px) {
-  .proposals-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
 }
 
 /* Assurer que les proposals ont la même hauteur */
@@ -408,7 +372,7 @@
 }
 
 .calculation-table td {
-  padding: 12px 24px; /* Augmenté le padding horizontal */
+  padding: 12px 24px;
   border-bottom: 1px solid #e5e7eb;
   vertical-align: middle;
 }
@@ -424,9 +388,9 @@
 .table-label {
   font-size: 0.875rem;
   color: #1f2937;
-  width: 65%; /* Augmenté pour plus d'espace pour les labels longs */
+  width: 65%;
   text-align: left;
-  padding-right: 40px; /* Espace supplémentaire à droite du label */
+  padding-right: 40px;
 }
 
 .table-value {
@@ -434,8 +398,8 @@
   font-weight: 600;
   color: #1f2937;
   width: 35%;
-  padding-left: 20px; /* Espace supplémentaire à gauche de la valeur */
-  white-space: nowrap; /* Empêche le retour à la ligne des valeurs */
+  padding-left: 20px;
+  white-space: nowrap;
 }
 
 .table-total-container {
@@ -490,9 +454,7 @@
   background: linear-gradient(135deg, #dcfce7 0%, #d1fae5 100%);
   border-radius: 8px;
   padding: 24px;
-
   border: 2px solid #86efac;
-
   width: 100%;
   box-sizing: border-box;
 }
@@ -546,7 +508,9 @@
   line-height: 1.5;
 }
 
-/* Responsive pour écrans larges */
+/* === RESPONSIVE BREAKPOINTS === */
+
+/* Desktop très large */
 @media (min-width: 1400px) {
   .max-w-7xl {
     padding: 3rem;
@@ -561,42 +525,208 @@
   }
 }
 
-/* Responsive pour mobiles */
-@media (max-width: 768px) {
-  .calculation-table td {
-    padding: 8px 16px;
-  }
-
-  .table-label,
-  .table-total-label,
-  .table-ton-label {
-    font-size: 0.8rem;
-    padding-right: 20px;
-    width: 60%;
-  }
-
-  .table-value,
-  .table-total-value,
-  .table-ton-value {
-    font-size: 0.9rem;
-    padding-left: 10px;
-    width: 40%;
+/* Tablettes et petits desktops */
+@media (max-width: 1200px) {
+  .proposals-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 }
 
-/* Pour les écrans très petits */
-@media (max-width: 480px) {
+@media (max-width: 1024px) {
+  .search-form-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+/* Tablettes */
+@media (max-width: 768px) {
+  .max-w-7xl {
+    padding: 1rem;
+  }
+
+  .grid {
+    gap: 1rem;
+  }
+
+  /* Cards responsive */
+  .card {
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+  }
+
+  .card-title {
+    font-size: 1.25rem;
+    margin-bottom: 16px;
+  }
+
+  /* Proposals grid mobile */
+  .proposals-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-top: 24px;
+  }
+
+  .proposal-card {
+    padding: 20px;
+  }
+
+  .proposal-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .carrier-badge {
+    align-self: flex-start;
+    font-size: 14px;
+    padding: 6px 12px;
+  }
+
+  /* Table mobile améliorée */
+  .calculation-table {
+    font-size: 14px;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .calculation-table td {
+    padding: 12px 8px;
+    word-wrap: break-word;
+  }
+
   .table-label,
   .table-total-label,
   .table-ton-label {
-    width: 55%;
-    padding-right: 15px;
+    font-size: 13px;
+    font-weight: 500;
+    width: 60%;
+    padding-right: 12px;
   }
 
   .table-value,
   .table-total-value,
   .table-ton-value {
+    font-size: 14px;
+    font-weight: 600;
+    width: 40%;
+    text-align: right;
+    padding-left: 10px;
+  }
+
+  /* Prix final mobile */
+  .final-price {
+    padding: 20px;
+    text-align: center;
+  }
+
+  .green-label {
+    font-size: 16px;
+    font-weight: 600;
+  }
+}
+
+/* Téléphones */
+@media (max-width: 480px) {
+  .main-container {
+    padding: 12px;
+    min-height: 100vh;
+  }
+
+  .max-w-7xl {
+    padding: 8px;
+  }
+
+  /* Header mobile optimisé */
+  .header-title h1 {
+    font-size: 1.8rem;
+    text-align: center;
+    line-height: 1.2;
+    margin-left: 8px;
+  }
+
+  .ship-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .header-subtitle,
+  .header-mode-description,
+  .header-region-description {
+    font-size: 1rem;
+    line-height: 1.4;
+    padding: 0 8px;
+  }
+
+  /* Formulaire de recherche mobile */
+  .search-form-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .form-input,
+  .form-select {
+    padding: 16px 12px;
+    font-size: 16px; /* Évite le zoom sur iOS */
+    border-radius: 8px;
+    border: 2px solid #e5e7eb;
+  }
+
+  .form-label {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #374151;
+  }
+
+  /* Boutons mobile optimisés */
+  .btn {
+    width: 100%;
+    padding: 16px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 8px;
+    min-height: 48px; /* Touch target minimum */
+    min-width: auto; /* Override desktop min-width */
+  }
+}
+
+/* Petits téléphones */
+@media (max-width: 375px) {
+  .header-title h1 {
+    font-size: 1.5rem;
+  }
+
+  .card {
+    padding: 12px;
+  }
+
+  .form-input,
+  .form-select {
+    padding: 14px 10px;
+    font-size: 16px;
+  }
+
+  .calculation-table td {
+    padding: 8px 4px;
+  }
+
+  .table-label,
+  .table-total-label,
+  .table-ton-label {
+    font-size: 12px;
+    width: 55%;
+    padding-right: 8px;
+  }
+
+  .table-value,
+  .table-total-value,
+  .table-ton-value {
+    font-size: 13px;
     width: 45%;
-    padding-left: 5px;
+    padding-left: 4px;
   }
 }

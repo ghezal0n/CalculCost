@@ -47,3 +47,50 @@
   color: #333;
   text-align: center;
 }
+
+@media (max-width: 768px) {
+  .register-container {
+    margin: 20px 16px;
+    margin-top: 40px;
+    padding: 24px 20px;
+    border-radius: 12px;
+    max-width: 100%;
+    width: auto;
+  }
+
+  .register-title {
+    font-size: 24px;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .register-form {
+    gap: 16px;
+  }
+
+  .register-input {
+    padding: 16px 12px;
+    font-size: 16px; /* Évite le zoom iOS */
+    border-radius: 8px;
+    border: 2px solid #ccc;
+  }
+
+  .register-input:focus {
+    outline: none;
+    border-color: #2b7cff;
+    box-shadow: 0 0 0 2px rgba(43, 124, 255, 0.2);
+  }
+
+  .register-button {
+    padding: 16px;
+    font-size: 16px;
+    border-radius: 8px;
+    min-height: 48px;
+  }
+
+  .register-message {
+    font-size: 14px;
+    text-align: center;
+    padding: 0 8px;
+  }
+}

@@ -74,6 +74,44 @@ const CalculPage = () => {
     return countryId === "usa" ? "$" : "€";
   };
 
+  // Fonction pour sauvegarder dans l'historique
+  const saveToHistory = (origin, destination, routes) => {
+    if (!origin || !destination || routes.length === 0) return;
+
+    const calculations = routes.map((route) =>
+      calculateTotal(route.oceanFreight, route.origin)
+    );
+
+    const bestPrice = Math.min(
+      ...calculations.map((calc) => calc.allInByContainer)
+    );
+
+    const historyItem = {
+      origin,
+      destination,
+      countryId,
+      fcaMode: selectedFCAMode,
+      offersCount: routes.length,
+      bestPrice,
+      currency: getCurrency(),
+      timestamp: new Date().toISOString(),
+    };
+
+    // Récupérer l'historique existant
+    const existingHistory = JSON.parse(
+      localStorage.getItem("calculationHistory") || "[]"
+    );
+
+    // Ajouter le nouvel élément au début
+    const updatedHistory = [historyItem, ...existingHistory];
+
+    // Limiter à 50 éléments maximum
+    const limitedHistory = updatedHistory.slice(0, 50);
+
+    // Sauvegarder
+    localStorage.setItem("calculationHistory", JSON.stringify(limitedHistory));
+  };
+
   // Fonction pour créer les données pour l'Espagne
   function getSpainFreightData() {
     const spainData = [];
@@ -164,6 +202,23 @@ const CalculPage = () => {
   useEffect(() => {
     let defaultOrigin = "";
 
+    // Si on vient de l'historique, charger les données sauvegardées
+    if (location.state?.fromHistory && location.state?.historyData) {
+      const { origin, destination, fcaMode } = location.state.historyData;
+      setFormData((prev) => ({
+        ...prev,
+        origin,
+        destination,
+      }));
+
+      // Mettre à jour le mode FCA si nécessaire
+      if (fcaMode && fcaMode !== selectedFCAMode) {
+        localStorage.setItem("selectedFCAMode", fcaMode);
+      }
+
+      return;
+    }
+
     if (countryId === "belgium-germany") {
       defaultOrigin = "Antwerp";
     } else if (countryId === "spain" && origins.length === 1) {
@@ -178,7 +233,7 @@ const CalculPage = () => {
         origin: defaultOrigin,
       }));
     }
-  }, [origins, countryId, formData.origin]);
+  }, [origins, countryId, formData.origin, location.state]);
 
   const destinations = [
     ...new Set(currentFreightData.map((item) => item.destination)),
@@ -209,6 +264,11 @@ const CalculPage = () => {
 
     setAvailableRoutes(matchingRoutes);
     setShowCalculations(true);
+
+    // Sauvegarder dans l'historique seulement si on a des routes
+    if (matchingRoutes.length > 0) {
+      saveToHistory(formData.origin, formData.destination, matchingRoutes);
+    }
   };
 
   // Fonction de calcul selon le mode FCA
@@ -729,7 +789,7 @@ const CalculPage = () => {
             </p>
             {route.freetime && (
               <p className="text-m text-black-600 mt-1">
-                ⏱️ Freetime: {route.freetime}
+                ⏰ Freetime: {route.freetime}
               </p>
             )}
             {route.validUntil && (

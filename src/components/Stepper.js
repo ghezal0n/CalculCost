@@ -12,6 +12,10 @@ function Stepper() {
     { path: "/calcul", label: "Calcul", step: 4 },
   ];
 
+  if (location.pathname === "/historique" || location.state?.fromHistory) {
+    return null;
+  }
+
   const getCurrentStep = () => {
     const currentStep = steps.find((step) => step.path === location.pathname);
     return currentStep ? currentStep.step : 1;
@@ -19,7 +23,7 @@ function Stepper() {
 
   const currentStepNumber = getCurrentStep();
 
-  // Fonction pour gérer la navigation avec conservation des données
+  // gérer la navigation avec conservation des données
   const handleStepClick = (step) => {
     // Récupérer les données stockées dans location.state ou localStorage
     const countryId =
@@ -31,19 +35,31 @@ function Stepper() {
       if (countryId) {
         navigate(step.path, { state: { countryId: countryId } });
       } else {
-        // Si pas de countryId, rediriger vers la page région
         navigate("/");
       }
     } else if (step.path === "/calcul") {
-      // Pour la page calcul, on doit conserver le countryId
       if (countryId) {
         navigate(step.path, { state: { countryId: countryId } });
       } else {
         navigate("/");
       }
     } else if (step.path === "/usine") {
-      // Pour la page usine, on doit conserver le countryId
       if (countryId) {
+        const forbiddenCountries = [
+          "Spain",
+          "United States of America",
+          "Slovenia",
+        ];
+        const selectedCountry =
+          location.state?.countryName ||
+          localStorage.getItem("selectedCountryName");
+
+        if (forbiddenCountries.includes(selectedCountry)) {
+          // Bloquer l'accès à /usine
+          alert("L'accès à l'étape Usine n'est pas disponible pour ce pays.");
+          return; // on ne fait rien
+        }
+
         navigate(step.path, { state: { countryId: countryId } });
       } else {
         navigate("/");

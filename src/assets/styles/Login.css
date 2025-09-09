@@ -142,3 +142,80 @@ body {
   font-weight: bold;
   text-decoration: none;
 }
+
+@media (max-width: 768px) {
+  body {
+    padding: 16px;
+    align-items: flex-start;
+    padding-top: 40px;
+  }
+
+  .login-container {
+    padding: 32px 24px;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .login-logo {
+    height: 80px;
+    width: 80px;
+    margin-bottom: 24px;
+  }
+
+  .login-title {
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+
+  .login-subtitle {
+    font-size: 16px;
+    margin-bottom: 24px;
+  }
+
+  .input-field {
+    padding: 16px 16px;
+    font-size: 16px; /* Évite le zoom iOS */
+    margin-bottom: 20px;
+    border-radius: 10px;
+  }
+
+  .password-input-container {
+    margin-bottom: 16px;
+  }
+
+  .eye-icon {
+    right: 16px;
+    width: 24px;
+    height: 24px;
+  }
+
+  .submit-button {
+    padding: 16px;
+    font-size: 16px;
+    border-radius: 10px;
+    min-height: 48px;
+  }
+
+  .success-message,
+  .error-message {
+    padding: 16px;
+    font-size: 14px;
+    border-radius: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    padding: 24px 20px;
+  }
+
+  .login-title {
+    font-size: 20px;
+  }
+
+  .login-subtitle {
+    font-size: 14px;
+  }
+}
