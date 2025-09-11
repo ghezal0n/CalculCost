@@ -6,14 +6,6 @@ function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  const navItems = [
-    { path: "/", label: "Région" },
-    { path: "/transport", label: "Transport" },
-    { path: "/usine", label: "Usine" },
-    { path: "/calcul", label: "Calcul" },
-    { path: "/historique", label: "Historique" },
-  ];
-
   // Détecter la taille de l'écran
   useEffect(() => {
     const checkScreenSize = () => {
@@ -46,6 +38,21 @@ function Navbar() {
       document.body.style.overflow = "unset";
     };
   }, [isMobileMenuOpen]);
+
+  const shouldHideNavbar = location.state?.hideNavbar || false;
+
+  // Si hideNavbar est true, ne pas afficher la navbar
+  if (shouldHideNavbar) {
+    return null;
+  }
+
+  const navItems = [
+    { path: "/", label: "Région" },
+    { path: "/transport", label: "Transport" },
+    { path: "/usine", label: "Usine" },
+    { path: "/calcul", label: "Calcul" },
+    { path: "/historique", label: "Historique" },
+  ];
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);

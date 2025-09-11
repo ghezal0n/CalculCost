@@ -52,6 +52,7 @@ const HistoriquePage = () => {
       state: {
         countryId: item.countryId,
         fromHistory: true,
+        hideNavbar: true,
         historyData: {
           origin: item.origin,
           destination: item.destination,
