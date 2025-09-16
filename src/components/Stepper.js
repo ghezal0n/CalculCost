@@ -5,7 +5,7 @@ function Stepper() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const allowedPaths = ["/region", "/transport", "/usine", "/calcul"];
+  const allowedPaths = ["/", "/region", "/transport", "/usine", "/calcul"];
 
   if (!allowedPaths.includes(location.pathname)) {
     return null;

@@ -7,7 +7,8 @@ import UsinePage from "../pages/UsinePage";
 import LoginForm from "../auth/LoginForm";
 
 const routes = [
-  { path: "/", element: <LoginForm /> },
+  //{ path: "/", element: <LoginForm /> },
+  { path: "/", element: <RegionPage /> },
   { path: "/region", element: <RegionPage /> },
   { path: "/register", element: <RegisterPage /> },
   { path: "/transport", element: <TransportChoicePage /> },

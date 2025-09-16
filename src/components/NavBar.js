@@ -50,6 +50,7 @@ function Navbar() {
 
   // Liste des pages qui doivent afficher
   const allowedPaths = [
+    "/",
     "/region",
     "/transport",
     "/usine",
