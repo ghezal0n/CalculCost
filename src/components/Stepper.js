@@ -5,16 +5,18 @@ function Stepper() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const allowedPaths = ["/region", "/transport", "/usine", "/calcul"];
+
+  if (!allowedPaths.includes(location.pathname)) {
+    return null;
+  }
+
   const steps = [
     { path: "/", label: "Région", step: 1 },
     { path: "/transport", label: "Transport", step: 2 },
     { path: "/usine", label: "Usine", step: 3 },
     { path: "/calcul", label: "Calcul", step: 4 },
   ];
-
-  if (location.pathname === "/historique" || location.state?.fromHistory) {
-    return null;
-  }
 
   const getCurrentStep = () => {
     const currentStep = steps.find((step) => step.path === location.pathname);

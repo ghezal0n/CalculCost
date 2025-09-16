@@ -83,7 +83,7 @@ const HistoriquePage = () => {
         return "Slovenia";
       case "belgium-germany":
       default:
-        return "Belgium - Germany";
+        return "Belgium - Germany - Netherlands";
     }
   };
 

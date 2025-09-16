@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import logoutIcon from "../assets/images/logout.png";
 
 function Navbar() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -46,8 +48,21 @@ function Navbar() {
     return null;
   }
 
+  // Liste des pages qui doivent afficher
+  const allowedPaths = [
+    "/region",
+    "/transport",
+    "/usine",
+    "/calcul",
+    "/historique",
+  ];
+
+  if (!allowedPaths.includes(location.pathname)) {
+    return null;
+  }
+
   const navItems = [
-    { path: "/", label: "Région" },
+    { path: "/region", label: "Région" },
     { path: "/transport", label: "Transport" },
     { path: "/usine", label: "Usine" },
     { path: "/calcul", label: "Calcul" },
@@ -56,6 +71,16 @@ function Navbar() {
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  // Fonction de déconnexion
+  const handleLogout = () => {
+    // Fermer le menu mobile si ouvert
+    setIsMobileMenuOpen(false);
+
+    // Rediriger vers la page de connexion ou d'accueil
+    navigate("/login", { replace: true });
+    // ou navigate('/', { replace: true }); selon votre logique
   };
 
   // Composant SVG pour l'icône hamburger
@@ -86,6 +111,24 @@ function Navbar() {
     >
       <line x1="18" y1="6" x2="6" y2="18"></line>
       <line x1="6" y1="6" x2="18" y2="18"></line>
+    </svg>
+  );
+
+  // Composant SVG pour l'icône logout
+  const LogoutIcon = () => (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      style={{ marginRight: "0.5rem" }}
+    >
+      <path d="m9 21 5-5-5-5"></path>
+      <path d="M20 16v-2a4 4 0 0 0-4-4H4"></path>
+      <path d="m15 10 5 5"></path>
+      <path d="M4 21v-7a4 4 0 0 1 4-4h3"></path>
     </svg>
   );
 
@@ -131,6 +174,27 @@ function Navbar() {
     position: "absolute",
     left: "50%",
     transform: "translateX(-50%)",
+  };
+
+  const desktopRightSection = {
+    display: isMobile ? "none" : "flex",
+    alignItems: "center",
+    gap: "1rem",
+  };
+
+  const logoutButtonStyles = {
+    display: "flex",
+    alignItems: "center",
+    background: "#dc3545",
+    border: "none",
+    color: "white",
+    cursor: "pointer",
+    padding: "0.5rem 1rem",
+    borderRadius: "4px",
+    fontSize: "0.9rem",
+    fontWeight: "500",
+    transition: "all 0.3s",
+    minHeight: "36px",
   };
 
   const mobileMenuButtonStyles = {
@@ -188,6 +252,12 @@ function Navbar() {
     overflowY: "auto",
   };
 
+  const mobileMenuFooterStyles = {
+    padding: "1rem",
+    borderTop: "1px solid #495057",
+    flexShrink: 0,
+  };
+
   const mobileMenuListStyles = {
     listStyle: "none",
     padding: 0,
@@ -196,6 +266,23 @@ function Navbar() {
 
   const mobileMenuItemStyles = {
     borderBottom: "1px solid #495057",
+  };
+
+  const mobileLogoutButtonStyles = {
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    background: "#dc3545",
+    border: "none",
+    color: "white",
+    cursor: "pointer",
+    padding: "0.75rem 1rem",
+    borderRadius: "4px",
+    fontSize: "1rem",
+    fontWeight: "500",
+    transition: "all 0.3s",
+    minHeight: "48px",
   };
 
   const getLinkStyles = (isActive, isMobileLink = false) => ({
@@ -299,6 +386,35 @@ function Navbar() {
             })}
           </ul>
 
+          {/* Section droite desktop */}
+          <div style={desktopRightSection}>
+            <span
+              onClick={handleLogout}
+              style={{
+                color: "white",
+                cursor: "pointer",
+                fontSize: "1rem",
+                fontWeight: "500",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
+              onMouseEnter={(e) => (e.target.style.color = "#ffc107")}
+              onMouseLeave={(e) => (e.target.style.color = "white")}
+            >
+              <img
+                src={logoutIcon}
+                alt="Logout"
+                style={{
+                  width: "18px",
+                  height: "18px",
+                  filter: "brightness(0) saturate(100%) invert(100%)",
+                }}
+              />
+              Déconnexion
+            </span>
+          </div>
+
           {/* Bouton Menu Mobile */}
           <button
             style={mobileMenuButtonStyles}
@@ -369,6 +485,20 @@ function Navbar() {
               );
             })}
           </ul>
+        </div>
+
+        {/* Footer du menu mobile avec bouton logout */}
+        <div style={mobileMenuFooterStyles}>
+          <button
+            style={mobileLogoutButtonStyles}
+            onClick={handleLogout}
+            onMouseEnter={(e) => (e.target.style.backgroundColor = "#c82333")}
+            onMouseLeave={(e) => (e.target.style.backgroundColor = "#dc3545")}
+            aria-label="Se déconnecter"
+          >
+            <LogoutIcon />
+            Déconnexion
+          </button>
         </div>
       </div>
     </>

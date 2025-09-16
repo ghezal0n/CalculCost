@@ -400,6 +400,33 @@ const CalculPage = () => {
       return calculation;
     }
 
+    //Special case for Smurfit Piteå mill with Antwerp origin**
+    const selectedMill = localStorage.getItem("selectedMill");
+    if (selectedMill === "sp" && origin === "Antwerp") {
+      const preCarriageToAntwerp = 425;
+      const lashingAndSecuring = 75;
+      const stuffingRate = 7.6;
+
+      calculation = {
+        ...calculation,
+        preCarriageToAntwerp: preCarriageToAntwerp,
+        lashingAndSecuring: lashingAndSecuring,
+        stuffingRate: stuffingRate,
+        stuffingTotal: stuffingRate * fixedRates.tonWeight,
+        allInByContainer:
+          calculation.oceanFreight +
+          fixedRates.thcOrigin +
+          preCarriageToAntwerp +
+          lashingAndSecuring +
+          stuffingRate * fixedRates.tonWeight,
+        calculationType: "smurfit-antwerp",
+      };
+
+      calculation.allInByTon =
+        calculation.allInByContainer / fixedRates.tonWeight;
+      return calculation;
+    }
+
     if (calculationType === "mill-container") {
       //FCA Mill in Container : Ocean freight + THC Origin + Pre Carriage Niederauer Mühle
       calculation = {
@@ -494,8 +521,58 @@ const CalculPage = () => {
               </tr>
 
               {/* Affichage conditionnel selon le type de calcul */}
-              {calculation.calculationType ===
-              "fob-container" ? null : calculation.calculationType ===
+              {calculation.calculationType === "smurfit-antwerp" ? (
+                // Special display for Smurfit Piteå with Antwerp origin
+                <>
+                  <tr>
+                    <td className="table-label">THC Origin</td>
+                    <td className="table-value">
+                      {calculation.thcOrigin.toLocaleString("fr-FR", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}{" "}
+                      {getCurrency()}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="table-label">Pre Carriage to Antwerp</td>
+                    <td className="table-value">
+                      {calculation.preCarriageToAntwerp.toLocaleString(
+                        "fr-FR",
+                        {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        }
+                      )}{" "}
+                      {getCurrency()}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="table-label">Lashing and Securing</td>
+                    <td className="table-value">
+                      {calculation.lashingAndSecuring.toLocaleString("fr-FR", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}{" "}
+                      {getCurrency()}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="table-label">
+                      Stuffing: {calculation.stuffingRate}€ ×{" "}
+                      {calculation.tonWeight} tons
+                    </td>
+                    <td className="table-value">
+                      {calculation.stuffingTotal.toLocaleString("fr-FR", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}{" "}
+                      {getCurrency()}
+                    </td>
+                  </tr>
+                </>
+              ) : calculation.calculationType ===
+                "fob-container" ? null : calculation.calculationType ===
                 "mill-container" ? (
                 // Pour FCA Port in Container
                 <>
@@ -779,7 +856,7 @@ const CalculPage = () => {
         {/* Prix total en évidence */}
         <div className="final-price">
           <div className="text-center">
-            <p className="green-label">TOTAL PRICE PER CONTAINER</p>
+            <p className="green-label">TOTAL FREIGHT / CONTAINER</p>
             <p className="text-3xl font-bold text-green-700">
               {calculation.allInByContainer.toLocaleString("fr-FR", {
                 minimumFractionDigits: 2,
@@ -825,7 +902,7 @@ const CalculPage = () => {
         <div className="header mb-8">
           <div className="header-title">
             <Ship className="ship-icon" />
-            <h1>Maritime Freight Calculator</h1>
+            <h1>Freight Calculator</h1>
           </div>
           <p className="header-subtitle">
             Compare offers from multiple carriers
@@ -845,7 +922,7 @@ const CalculPage = () => {
                 ? " Spain"
                 : countryId === "slovenia"
                 ? " Slovenia"
-                : " Belgium - Germany"}
+                : " Belgium - Germany - Netherlands"}
             </p>
           )}
         </div>

@@ -1,3 +1,15 @@
+/* 🎨 Variables globales */
+:root {
+  --primary: #6366f1;
+  --secondary: #06b6d4;
+  --error: #ef4444;
+  --success: #16a34a;
+  --text-dark: #333;
+  --bg-light: rgba(255, 255, 255, 0.8);
+  --radius: 12px;
+}
+
+/* 🌍 Body */
 body {
   margin: 0;
   font-family: sans-serif;
@@ -5,10 +17,12 @@ body {
   min-height: 100vh;
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
+/* 📦 Container */
 .login-container {
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--bg-light);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 20px;
@@ -18,14 +32,16 @@ body {
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
+/* 🔵 Logo */
 .login-logo {
-  background: linear-gradient(to right, #6366f1, #06b6d4);
+  background: linear-gradient(to right, var(--primary), var(--secondary));
   height: 120px;
   width: 120px;
   border-radius: 50%;
   margin: 0 auto 30px;
 }
 
+/* 📝 Titres */
 .login-title {
   text-align: center;
   font-weight: bold;
@@ -36,35 +52,38 @@ body {
 .login-subtitle {
   text-align: center;
   font-size: 18px;
-  color: #333;
+  color: var(--text-dark);
   margin-bottom: 30px;
 }
 
+/* 🖊️ Inputs */
 .input-field {
   width: 100%;
   background: rgba(243, 244, 246, 0.5);
   border: 2px solid #e5e7eb;
-  border-radius: 12px;
+  border-radius: var(--radius);
   padding: 18px 20px;
   margin-bottom: 24px;
   font-size: 16px;
   box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .input-field.error {
   border-color: #fca5a5;
 }
 
-.input-field:focus {
+.input-field:focus-visible {
   outline: none;
-  border-color: #6366f1;
+  border-color: var(--primary);
 }
 
-.input-field.error:focus {
-  border-color: #ef4444;
+.input-field.error:focus-visible {
+  border-color: var(--error);
   box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.3);
 }
 
+/* 🔒 Password container */
 .password-input-container {
   position: relative;
   margin-bottom: 20px;
@@ -89,9 +108,10 @@ body {
 }
 
 .eye-icon:hover {
-  color: #6366f1;
+  color: var(--primary);
 }
 
+/* 🔘 Boutons */
 .submit-button {
   width: 100%;
   background: linear-gradient(to right, #6366f1, #06b6d4);
@@ -104,33 +124,55 @@ body {
   cursor: pointer;
   margin-top: 10px;
 }
-
 .submit-button:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
   transition: all 0.2s ease;
 }
 
-.success-message {
-  background: #ecfdf5;
-  border: 1px solid #bbf7d0;
-  color: #166534;
+.btn {
+  width: 100%;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 16px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+/* ✅ Messages */
+.message {
   padding: 14px;
   border-radius: 10px;
   margin-bottom: 20px;
   font-size: 15px;
+}
+
+.success-message {
+  background: #ecfdf5;
+  border: 1px solid #bbf7d0;
+  color: #166534;
 }
 
 .error-message {
   background: #fef2f2;
   border: 1px solid #fecaca;
   color: #991b1b;
-  padding: 14px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  font-size: 15px;
 }
 
+/* 📌 Footer */
 .login-footer {
   text-align: center;
   margin-top: 25px;
@@ -138,11 +180,12 @@ body {
 }
 
 .login-footer a {
-  color: #6366f1;
+  color: var(--primary);
   font-weight: bold;
   text-decoration: none;
 }
 
+/* 📱 Responsive */
 @media (max-width: 768px) {
   body {
     padding: 16px;
@@ -175,8 +218,8 @@ body {
   }
 
   .input-field {
-    padding: 16px 16px;
-    font-size: 16px; /* Évite le zoom iOS */
+    padding: 16px;
+    font-size: 16px; /* évite zoom iOS */
     margin-bottom: 20px;
     border-radius: 10px;
   }
@@ -191,15 +234,14 @@ body {
     height: 24px;
   }
 
-  .submit-button {
+  .btn {
     padding: 16px;
     font-size: 16px;
     border-radius: 10px;
     min-height: 48px;
   }
 
-  .success-message,
-  .error-message {
+  .message {
     padding: 16px;
     font-size: 14px;
     border-radius: 8px;

@@ -5,16 +5,9 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import RegisterPage from "./pages/RegistrePage";
-import RegionPage from "./pages/RegionPage";
-import TransportChoicePage from "./pages/TransportChoicePage";
-import CalculPage from "./pages/CalculPage";
-import HistoriquePage from "./pages/HistoriquePage";
-import ProtectedRoute from "./components/ProtectedRoute";
-import LoginForm from "./auth/LoginForm";
-import UsinePage from "./pages/UsinePage";
 import Navbar from "./components/NavBar";
 import Stepper from "./components/Stepper";
+import routes from "./auth/Routes";
 
 function App() {
   useEffect(() => {
@@ -31,14 +24,9 @@ function App() {
         <Stepper />
         <div style={{ padding: "2rem" }}>
           <Routes>
-            <Route path="/" element={<RegionPage />} />
-            {/* <Route path="/login" element={<LoginForm />} />
-            <Route path="/register" element={<RegisterPage />} /> */}
-            <Route path="/transport" element={<TransportChoicePage />} />
-            <Route path="/usine" element={<UsinePage />} />
-            <Route path="/calcul" element={<CalculPage />} />
-            <Route path="/historique" element={<HistoriquePage />} />
-
+            {routes.map((route, index) => (
+              <Route key={index} path={route.path} element={route.element} />
+            ))}
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </div>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "../assets/styles/Login.css";
 import "../assets/images/LogoRoxcel.png";
 import { useNavigate } from "react-router-dom";
-import { Eye, EyeOff, Mail, Lock, AlertCircle, Loader2 } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
@@ -20,7 +20,7 @@ const LoginForm = ({ onLoginSuccess }) => {
     setError("");
     setSuccess("");
     if (!email || !password) {
-      setError("Veuillez remplir tous les champs.");
+      setError("Please fill in all fields.");
       return;
     }
     try {
@@ -33,18 +33,18 @@ const LoginForm = ({ onLoginSuccess }) => {
       );
       const token = response.data.token;
       localStorage.setItem("token", token);
-      setSuccess("Connexion réussie !");
-      navigate("/freight");
+      setSuccess("Login successful!");
+      navigate("/region");
     } catch (err) {
-      setError("Email ou mot de passe incorrect.");
+      setError("Incorrect email or password.");
     }
   };
 
   return (
     <div className="login-container">
       <div className="login-logo"></div>
-      <div className="login-title">Connexion</div>
-      <div className="login-subtitle">Accédez à votre compte</div>
+      <div className="login-title">Login</div>
+      <div className="login-subtitle">Access your account</div>
       {success && <div className="success-message">{success}</div>}
       {error && <div className="error-message">{error}</div>}
       <form onSubmit={handleSubmit}>
@@ -61,7 +61,7 @@ const LoginForm = ({ onLoginSuccess }) => {
               error && !password ? "error" : ""
             }`}
             type={showPassword ? "text" : "password"}
-            placeholder="Mot de passe"
+            placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -73,12 +73,12 @@ const LoginForm = ({ onLoginSuccess }) => {
           </div>
         </div>
         <button className="submit-button" type="submit" disabled={isLoading}>
-          {isLoading ? "Connexion en cours..." : "Se connecter"}
+          {isLoading ? "Logging in..." : "Login"}
         </button>
       </form>
-      <div className="login-footer">
-        Pas encore de compte ? <Link to="/register">S'inscrire</Link>.
-      </div>
+      {/* <div className="login-footer">
+        Don’t have an account yet? <Link to="/register">Sign up</Link>.
+      </div> */}
     </div>
   );
 };

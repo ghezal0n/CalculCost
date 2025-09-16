@@ -8,7 +8,7 @@ const RegionPage = () => {
   const countries = [
     {
       id: "belgium-germany",
-      name: "Belgium - Germany",
+      name: "Belgium - Germany - Netherlands",
       clickable: true,
     },
     {

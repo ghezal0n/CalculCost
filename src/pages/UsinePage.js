@@ -6,7 +6,6 @@ const UsinePage = () => {
   const [currentPage, setCurrentPage] = useState();
   const navigate = useNavigate();
   const location = useLocation();
-
   const propositions = location.state?.propositions || [];
 
   const countries = [
@@ -15,10 +14,19 @@ const UsinePage = () => {
       name: "Niederauer Mühle",
       clickable: true,
     },
+    {
+      id: "sp",
+      name: "Smurfit Piteå",
+      clickable: true,
+    },
   ];
 
   const handleCountryClick = (country) => {
-    if (country.clickable && country.id === "nm") {
+    if ((country.clickable && country.id === "nm") || country.id === "sp") {
+      // Save selected mill to localStorage
+      localStorage.setItem("selectedMill", country.id);
+      localStorage.setItem("selectedMillName", country.name);
+
       setCurrentPage("usine");
     }
   };
@@ -47,11 +55,10 @@ const UsinePage = () => {
                 d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
               />
             </svg>
-            <h1 className="app-title">Select your mill </h1>
+            <h1 className="app-title">Select your mill</h1>
           </div>
           <p className="app-subtitle">Choose a mill to access the calculator</p>
         </header>
-
         <ul className="countries-list">
           {countries.map((country) => (
             <li
@@ -83,7 +90,6 @@ const UsinePage = () => {
                     </div>
                   )}
                 </div>
-
                 {country.clickable && (
                   <div className="access-link">
                     <svg className="external-arrow" viewBox="0 0 24 24">
@@ -96,10 +102,9 @@ const UsinePage = () => {
                     </svg>
                   </div>
                 )}
-
                 {!country.clickable && (
                   <div className="coming-soon">
-                    <span>Bientôt disponible</span>
+                    <span>Coming soon</span>
                   </div>
                 )}
               </div>
