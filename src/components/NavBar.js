@@ -8,11 +8,10 @@ function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Détecter la taille de l'écran
+  // taille de l'écran
   useEffect(() => {
     const checkScreenSize = () => {
       setIsMobile(window.innerWidth <= 768);
-      // Fermer le menu mobile quand on passe en desktop
       if (window.innerWidth > 768) {
         setIsMobileMenuOpen(false);
       }
@@ -23,12 +22,10 @@ function Navbar() {
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
-  // Fermer le menu mobile quand on change de page
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location.pathname]);
 
-  // Empêcher le scroll quand le menu mobile est ouvert
   useEffect(() => {
     if (isMobileMenuOpen) {
       document.body.style.overflow = "hidden";
@@ -43,14 +40,13 @@ function Navbar() {
 
   const shouldHideNavbar = location.state?.hideNavbar || false;
 
-  // Si hideNavbar est true, ne pas afficher la navbar
   if (shouldHideNavbar) {
     return null;
   }
 
-  // Liste des pages qui doivent afficher
   const allowedPaths = [
     "/",
+    "/department",
     "/region",
     "/transport",
     "/usine",
@@ -63,7 +59,8 @@ function Navbar() {
   }
 
   const navItems = [
-    { path: "/region", label: "Région" },
+    { path: "/department", label: "Department" },
+    { path: "/region", label: "Region" },
     { path: "/transport", label: "Transport" },
     { path: "/usine", label: "Usine" },
     { path: "/calcul", label: "Calcul" },
@@ -74,17 +71,12 @@ function Navbar() {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  // Fonction de déconnexion
   const handleLogout = () => {
-    // Fermer le menu mobile si ouvert
     setIsMobileMenuOpen(false);
-
-    // Rediriger vers la page de connexion ou d'accueil
     navigate("/login", { replace: true });
-    // ou navigate('/', { replace: true }); selon votre logique
   };
 
-  // Composant SVG pour l'icône hamburger
+  // icone hamburger
   const MenuIcon = () => (
     <svg
       width="24"
@@ -100,7 +92,6 @@ function Navbar() {
     </svg>
   );
 
-  // Composant SVG pour l'icône fermer
   const CloseIcon = () => (
     <svg
       width="24"
@@ -209,7 +200,7 @@ function Navbar() {
     padding: "0.5rem",
     borderRadius: "4px",
     transition: "background-color 0.3s",
-    minWidth: "44px", // Touch target minimum
+    minWidth: "44px",
     minHeight: "44px",
   };
 
@@ -334,41 +325,32 @@ function Navbar() {
 
   return (
     <>
-      {/* Styles CSS pour les animations */}
-      <style jsx>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
+      <style>
+        {`
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+  
+      @keyframes fadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
+      }
+  
+      @media (max-width: 768px) {
+        body.menu-open {
+          overflow: hidden !important;
         }
-
-        @keyframes fadeOut {
-          from {
-            opacity: 1;
-          }
-          to {
-            opacity: 0;
-          }
-        }
-
-        @media (max-width: 768px) {
-          body.menu-open {
-            overflow: hidden !important;
-          }
-        }
-      `}</style>
+      }
+      `}
+      </style>
 
       <nav style={navStyles}>
         <div style={containerStyles}>
-          {/* Logo */}
           <Link to="/" style={logoStyles}>
             Shipmate
           </Link>
 
-          {/* Navigation Desktop */}
           <ul style={desktopNavStyles}>
             {navItems.map((item) => {
               const isActive = location.pathname === item.path;
@@ -387,7 +369,6 @@ function Navbar() {
             })}
           </ul>
 
-          {/* Section droite desktop */}
           <div style={desktopRightSection}>
             <span
               onClick={handleLogout}
@@ -416,7 +397,6 @@ function Navbar() {
             </span>
           </div>
 
-          {/* Bouton Menu Mobile */}
           <button
             style={mobileMenuButtonStyles}
             onClick={toggleMobileMenu}
@@ -432,14 +412,12 @@ function Navbar() {
         </div>
       </nav>
 
-      {/* Overlay Mobile */}
       <div
         style={mobileMenuOverlayStyles}
         onClick={() => setIsMobileMenuOpen(false)}
         aria-hidden="true"
       />
 
-      {/* Menu Mobile */}
       <div
         style={mobileMenuStyles}
         role="navigation"
@@ -488,7 +466,6 @@ function Navbar() {
           </ul>
         </div>
 
-        {/* Footer du menu mobile avec bouton logout */}
         <div style={mobileMenuFooterStyles}>
           <button
             style={mobileLogoutButtonStyles}

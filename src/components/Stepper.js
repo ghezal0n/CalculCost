@@ -5,17 +5,25 @@ function Stepper() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const allowedPaths = ["/", "/region", "/transport", "/usine", "/calcul"];
+  const allowedPaths = [
+    "/",
+    "/department",
+    "/region",
+    "/usine",
+    "/transport",
+    "/calcul",
+  ];
 
   if (!allowedPaths.includes(location.pathname)) {
     return null;
   }
 
   const steps = [
-    { path: "/", label: "Région", step: 1 },
-    { path: "/transport", label: "Transport", step: 2 },
+    { path: "/", label: "Department", step: 1 },
+    { path: "/region", label: "Region", step: 2 },
     { path: "/usine", label: "Usine", step: 3 },
-    { path: "/calcul", label: "Calcul", step: 4 },
+    { path: "/transport", label: "Transport", step: 4 },
+    { path: "/calcul", label: "Calcul", step: 5 },
   ];
 
   const getCurrentStep = () => {
@@ -25,9 +33,9 @@ function Stepper() {
 
   const currentStepNumber = getCurrentStep();
 
-  // gérer la navigation avec conservation des données
+  // navigation avec conservation des données
   const handleStepClick = (step) => {
-    // Récupérer les données stockées dans location.state ou localStorage
+    // récupérer les données stockées dans location.state ou localStorage
     const countryId =
       location.state?.countryId || localStorage.getItem("selectedCountryId");
     const selectedFCAMode = localStorage.getItem("selectedFCAMode");
@@ -57,7 +65,7 @@ function Stepper() {
           localStorage.getItem("selectedCountryName");
 
         if (forbiddenCountries.includes(selectedCountry)) {
-          // Bloquer l'accès à /usine
+          // bloquer l'accès à /usine
           alert("L'accès à l'étape Usine n'est pas disponible pour ce pays.");
           return; // on ne fait rien
         }
@@ -67,7 +75,6 @@ function Stepper() {
         navigate("/");
       }
     } else {
-      // Pour les autres pages, navigation normale
       navigate(step.path);
     }
   };

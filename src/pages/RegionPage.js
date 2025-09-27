@@ -3,7 +3,7 @@ import "../assets/styles/Region.css";
 import { useNavigate } from "react-router-dom";
 
 const RegionPage = () => {
-  const [currentPage, setCurrentPage] = useState();
+  const [currentPage, setCurrentPage] = useState(null);
   const navigate = useNavigate();
   const countries = [
     {
@@ -11,46 +11,41 @@ const RegionPage = () => {
       name: "Belgium - Germany - Netherlands",
       clickable: true,
     },
-    {
-      id: "spain",
-      name: "Spain",
-      clickable: true,
-    },
-    {
-      id: "usa",
-      name: "United States of America",
-      clickable: true,
-    },
-    {
-      id: "slovenia",
-      name: "Slovenia",
-      clickable: true,
-    },
-    {
-      id: "italy",
-      name: "Italy",
-      clickable: false,
-    },
-    {
-      id: "france",
-      name: "France",
-      clickable: false,
-    },
+    { id: "spain", name: "Spain", clickable: true },
+    { id: "usa", name: "United States of America", clickable: true },
+    { id: "slovenia", name: "Slovenia", clickable: true },
+    { id: "italy", name: "Italy", clickable: false },
+    { id: "france", name: "France", clickable: false },
   ];
 
-  const handleCountryClick = (country) => {
-    if (country.clickable) {
-      // Sauvegarder le countryId dans localStorage pour la persistance
+  // retourne la liste d'usines pour une région donnée (vide si aucune)
+  const getPropositionsForRegion = (regionId) => {
+    if (regionId === "belgium-germany") {
+      return [
+        { id: "nm", name: "Niederauer Mühle", clickable: true },
+        { id: "sp", name: "Smurfit Piteå", clickable: true },
+      ];
+    }
+    // exemple : si tu veux ajouter plus tard pour un autre pays -> else if...
+    return [];
+  };
 
-      localStorage.setItem("selectedCountryId", country.id);
-      setCurrentPage("transport");
+  const handleCountryClick = (country) => {
+    if (!country.clickable) return;
+
+    const propositions = getPropositionsForRegion(country.id);
+
+    // persist selected country
+    localStorage.setItem("selectedCountryId", country.id);
+
+    if (propositions.length > 0) {
+      // il y a des usines -> on va sur la page Usine avec les propositions
+      navigate("/usine", { state: { countryId: country.id, propositions } });
+    } else {
+      // pas d'usine -> on va directement sur Transport
       navigate("/transport", { state: { countryId: country.id } });
     }
   };
-
-  //   if (currentPage === "transport") {
-  //     navigate("/transport");
-  //   }
 
   return (
     <div className="app-container">
@@ -72,11 +67,11 @@ const RegionPage = () => {
             </svg>
             <h1>Select your loading port</h1>
           </div>
-
           <p className="app-subtitle">
             Choose a destination to access transport options
           </p>
         </header>
+
         <ul className="countries-list">
           {countries.map((country) => (
             <li

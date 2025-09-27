@@ -5,14 +5,14 @@ import CalculPage from "../pages/CalculPage";
 import HistoriquePage from "../pages/HistoriquePage";
 import UsinePage from "../pages/UsinePage";
 import LoginForm from "../auth/LoginForm";
+import DepartmentPage from "../pages/DepartmentPage.js";
 
 const routes = [
-  //{ path: "/", element: <LoginForm /> },
-  { path: "/", element: <RegionPage /> },
+  { path: "/", element: <DepartmentPage /> },
   { path: "/region", element: <RegionPage /> },
   { path: "/register", element: <RegisterPage /> },
-  { path: "/transport", element: <TransportChoicePage /> },
   { path: "/usine", element: <UsinePage /> },
+  { path: "/transport", element: <TransportChoicePage /> },
   { path: "/calcul", element: <CalculPage /> },
   { path: "/historique", element: <HistoriquePage /> },
 ];

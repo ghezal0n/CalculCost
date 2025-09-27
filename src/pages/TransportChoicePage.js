@@ -190,13 +190,12 @@ const TransportChoicePage = () => {
               d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
             ></path>
           </svg>
-          <h1>FCA Transport Mode</h1>
+          <h1>Transport Mode</h1>
         </div>
         {/* <p className="header-subtitle">Choisissez votre mode de livraison préféré</p> */}
         <p className="header-description">
-          {/* Sélectionnez l'option qui correspond le mieux à vos besoins logistiques. 
-              Chaque mode offre des avantages spécifiques selon votre situation. */}
-          Click on a transport mode to access the calculator directly
+          {/*           
+          Click on a transport mode to access the calculator directly */}
           {countryId && (
             <p className="header-region-description">
               Incoterm selected :{" "}
@@ -236,7 +235,7 @@ const TransportChoicePage = () => {
               </svg>
             </div>
             <h3 className="choice-title">{c.title}</h3>
-            <p className="choice-description">{c.description}</p>
+            {/* <p className="choice-description">{c.description}</p> */}
             <ul className="choice-features">
               {/* {c.features.map((f) => (
                 <li key={f}>{f}</li>

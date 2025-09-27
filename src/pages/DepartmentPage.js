@@ -1,31 +1,50 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import "../assets/styles/Usine.css";
 import { useNavigate, useLocation } from "react-router-dom";
 
-const UsinePage = () => {
+const DepartmentPage = () => {
+  const [currentPage, setCurrentPage] = useState();
   const navigate = useNavigate();
   const location = useLocation();
-
   const propositions = location.state?.propositions || [];
 
-  // Sécurité : si on arrive sur /usine sans propositions, on redirige vers /transport
-  useEffect(() => {
-    if (!propositions || propositions.length === 0) {
-      // Passe éventuellement countryId pour contexte si disponible
-      const countryId = location.state?.countryId;
-      navigate("/transport", { state: { countryId } });
+  const countries = [
+    {
+      id: "181",
+      name: "181",
+      clickable: true,
+    },
+    {
+      id: "183",
+      name: "183",
+      clickable: true,
+    },
+    {
+      id: "185",
+      name: "185",
+      clickable: true,
+    },
+  ];
+
+  const handleCountryClick = (country) => {
+    if (
+      (country.clickable && country.id === "181") ||
+      country.id === "183" ||
+      country.id === "185"
+    ) {
+      // Save selected mill to localStorage
+      localStorage.setItem("selectedMill", country.id);
+      localStorage.setItem("selectedMillName", country.name);
+
+      setCurrentPage("department");
     }
-  }, [propositions, navigate, location.state]);
-
-  const handleMillClick = (mill) => {
-    if (!mill.clickable) return;
-
-    localStorage.setItem("selectedMill", mill.id);
-    localStorage.setItem("selectedMillName", mill.name);
-
-    // naviguer vers transport en passant la sélection
-    navigate("/transport", { state: { selectedMill: mill, propositions } });
   };
+
+  useEffect(() => {
+    if (currentPage === "department") {
+      navigate("/region", { state: { propositions } });
+    }
+  }, [currentPage, navigate, propositions]);
 
   return (
     <div className="app-container">
@@ -49,26 +68,25 @@ const UsinePage = () => {
           </div>
           <p className="app-subtitle">Choose a mill to access the calculator</p>
         </header>
-
         <ul className="countries-list">
-          {propositions.map((mill) => (
+          {countries.map((country) => (
             <li
-              key={mill.id}
-              onClick={() => handleMillClick(mill)}
+              key={country.id}
+              onClick={() => handleCountryClick(country)}
               className={`country-item ${
-                mill.clickable ? "clickable" : "disabled"
+                country.clickable ? "clickable" : "disabled"
               }`}
             >
               <div className="item-content">
                 <div className="item-header">
                   <h2
                     className={`country-name ${
-                      mill.clickable ? "active" : "inactive"
+                      country.clickable ? "active" : "inactive"
                     }`}
                   >
-                    {mill.name}
+                    {country.name}
                   </h2>
-                  {mill.clickable && (
+                  {country.clickable && (
                     <div className="item-icon">
                       <svg className="arrow-icon" viewBox="0 0 24 24">
                         <path
@@ -81,8 +99,7 @@ const UsinePage = () => {
                     </div>
                   )}
                 </div>
-
-                {mill.clickable && (
+                {country.clickable && (
                   <div className="access-link">
                     <svg className="external-arrow" viewBox="0 0 24 24">
                       <path
@@ -94,6 +111,11 @@ const UsinePage = () => {
                     </svg>
                   </div>
                 )}
+                {!country.clickable && (
+                  <div className="coming-soon">
+                    <span>Coming soon</span>
+                  </div>
+                )}
               </div>
             </li>
           ))}
@@ -103,4 +125,4 @@ const UsinePage = () => {
   );
 };
 
-export default UsinePage;
+export default DepartmentPage;
