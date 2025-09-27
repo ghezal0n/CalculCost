@@ -48,8 +48,8 @@ function Navbar() {
     "/",
     "/department",
     "/region",
-    "/transport",
     "/usine",
+    "/transport",
     "/calcul",
     "/historique",
   ];
@@ -61,8 +61,8 @@ function Navbar() {
   const navItems = [
     { path: "/department", label: "Department" },
     { path: "/region", label: "Region" },
-    { path: "/transport", label: "Transport" },
     { path: "/usine", label: "Usine" },
+    { path: "/transport", label: "Transport" },
     { path: "/calcul", label: "Calcul" },
     { path: "/historique", label: "Historique" },
   ];

@@ -90,12 +90,11 @@ const TransportChoicePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Récupérer le countryId depuis location.state ou localStorage
   const countryId =
     location.state?.countryId ||
     localStorage.getItem("selectedCountryId") ||
     null;
-  // Sauvegarder dans localStorage si disponible dans location.state
+
   useEffect(() => {
     if (location.state?.countryId) {
       localStorage.setItem("selectedCountryId", location.state.countryId);
@@ -123,54 +122,52 @@ const TransportChoicePage = () => {
     });
   }, []);
 
+  const buildPropositionsForChoice = (choiceKey) => {
+    const millProps = [
+      "Ocean freight",
+      "THC Origin",
+      "Pre Carriage Niederauer Mühle",
+      "ALL IN BY CONTAINER",
+      "ALL IN BY TON",
+    ];
+    const portProps = [
+      "Ocean freight",
+      "THC Origin",
+      "Container Pre-collection",
+      "Container discharge + Container stuffing",
+      "ALL IN BY CONTAINER",
+      "ALL IN BY TON",
+    ];
+    const defaultProps = [
+      "Ocean freight",
+      "ALL IN BY CONTAINER",
+      "ALL IN BY TON",
+    ];
+
+    if (choiceKey === "fca-mill-truck" || choiceKey === "fca-mill-container")
+      return millProps;
+    if (choiceKey === "fca-port-truck" || choiceKey === "fca-port-container")
+      return portProps;
+    if (choiceKey === "fob-container") return defaultProps;
+    return defaultProps;
+  };
+
   const handleCardClick = (choiceKey) => {
     setSelectedChoice(choiceKey);
     localStorage.setItem("selectedFCAMode", choiceKey);
     localStorage.setItem("selectedFCAModeLabel", choiceConfig[choiceKey]);
 
-    if (choiceKey === "fca-mill-truck" || choiceKey === "fca-mill-container") {
-      navigate("/usine", {
-        state: {
-          countryId: countryId,
-          propositions: [
-            "Ocean freight",
-            "THC Origin",
-            "Pre Carriage Niederauer Mühle",
-            "ALL IN BY CONTAINER",
-            "ALL IN BY TON",
-          ],
-        },
-      });
-    } else if (
-      choiceKey === "fca-port-truck" ||
-      choiceKey === "fca-port-container"
-    ) {
-      navigate("/calcul", {
-        state: {
-          countryId: countryId,
-          propositions: [
-            "Ocean freight",
-            "THC Origin",
-            "Container Pre-collection",
-            "Container discharge + Container stuffing",
-            "ALL IN BY CONTAINER",
-            "ALL IN BY TON",
-          ],
-        },
-      });
-    } else if (choiceKey === "fob-container") {
-      // Navigation pour FOB - va directement au calculateur
-      navigate("/calcul", {
-        state: {
-          countryId: countryId,
-          propositions: [
-            "Ocean freight",
-            "ALL IN BY CONTAINER",
-            "ALL IN BY TON",
-          ],
-        },
-      });
-    }
+    const propositions = buildPropositionsForChoice(choiceKey);
+
+    // -> TOUJOURS naviguer vers /calcul avec le payload nécessaire
+    navigate("/calcul", {
+      state: {
+        countryId,
+        selectedChoice: choiceKey,
+        selectedChoiceLabel: choiceConfig[choiceKey],
+        propositions,
+      },
+    });
   };
 
   return (
@@ -197,7 +194,7 @@ const TransportChoicePage = () => {
           {/*           
           Click on a transport mode to access the calculator directly */}
           {countryId && (
-            <p className="header-region-description">
+            <span className="header-region-description">
               Incoterm selected :{" "}
               {countryId === "usa"
                 ? "United States"
@@ -206,7 +203,7 @@ const TransportChoicePage = () => {
                 : countryId === "slovenia"
                 ? "Slovenia"
                 : "Belgium - Germany - Netherlands"}
-            </p>
+            </span>
           )}
         </p>
       </div>
@@ -235,12 +232,7 @@ const TransportChoicePage = () => {
               </svg>
             </div>
             <h3 className="choice-title">{c.title}</h3>
-            {/* <p className="choice-description">{c.description}</p> */}
-            <ul className="choice-features">
-              {/* {c.features.map((f) => (
-                <li key={f}>{f}</li>
-              ))} */}
-            </ul>
+            <ul className="choice-features"></ul>
           </div>
         ))}
       </div>
