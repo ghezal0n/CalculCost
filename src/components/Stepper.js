@@ -35,21 +35,38 @@ function Stepper() {
 
   // navigation avec conservation des données
   const handleStepClick = (step) => {
-    // récupérer les données stockées dans location.state ou localStorage
+    // Récupérer les données stockées dans location.state et localStorage
     const countryId =
       location.state?.countryId || localStorage.getItem("selectedCountryId");
     const selectedFCAMode = localStorage.getItem("selectedFCAMode");
+    const allowedChoices =
+      location.state?.allowedChoices ||
+      JSON.parse(localStorage.getItem("allowedChoices") || "null");
 
     if (step.path === "/transport") {
-      // Pour la page transport, on doit conserver le countryId
+      // Pour la page transport, on doit conserver le countryId ET les allowedChoices
       if (countryId) {
-        navigate(step.path, { state: { countryId: countryId } });
+        const navigationState = { countryId: countryId };
+
+        // Ajouter allowedChoices si disponibles
+        if (allowedChoices) {
+          navigationState.allowedChoices = allowedChoices;
+        }
+
+        navigate(step.path, { state: navigationState });
       } else {
         navigate("/");
       }
     } else if (step.path === "/calcul") {
       if (countryId) {
-        navigate(step.path, { state: { countryId: countryId } });
+        const navigationState = { countryId: countryId };
+
+        // Ajouter allowedChoices si disponibles
+        if (allowedChoices) {
+          navigationState.allowedChoices = allowedChoices;
+        }
+
+        navigate(step.path, { state: navigationState });
       } else {
         navigate("/");
       }
@@ -70,7 +87,39 @@ function Stepper() {
           return; // on ne fait rien
         }
 
-        navigate(step.path, { state: { countryId: countryId } });
+        // Récupérer les propositions depuis localStorage ou créer les propositions par défaut
+        let propositions = [];
+        try {
+          const storedPropositions = localStorage.getItem("usinePropositions");
+          if (storedPropositions) {
+            propositions = JSON.parse(storedPropositions);
+          }
+        } catch (e) {
+          console.error("Erreur lors de la récupération des propositions:", e);
+        }
+
+        // Si pas de propositions stockées, créer les propositions par défaut
+        if (!propositions || propositions.length === 0) {
+          propositions = [
+            {
+              id: "nm",
+              name: "Niederauer Mühle",
+              clickable: true,
+            },
+            {
+              id: "sp",
+              name: "Smurfit Piteå",
+              clickable: true,
+            },
+          ];
+        }
+
+        navigate(step.path, {
+          state: {
+            countryId: countryId,
+            propositions: propositions,
+          },
+        });
       } else {
         navigate("/");
       }

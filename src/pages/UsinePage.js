@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import "../assets/styles/Usine.css";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -8,10 +8,16 @@ const UsinePage = () => {
 
   const propositions = location.state?.propositions || [];
 
+  // Sauvegarder les propositions dans localStorage
+  useEffect(() => {
+    if (propositions && propositions.length > 0) {
+      localStorage.setItem("usinePropositions", JSON.stringify(propositions));
+    }
+  }, [propositions]);
+
   // Sécurité : si on arrive sur /usine sans propositions, on redirige vers /transport
   useEffect(() => {
     if (!propositions || propositions.length === 0) {
-      // Passe éventuellement countryId pour contexte si disponible
       const countryId = location.state?.countryId;
       navigate("/transport", { state: { countryId } });
     }
@@ -20,11 +26,58 @@ const UsinePage = () => {
   const handleMillClick = (mill) => {
     if (!mill.clickable) return;
 
+    // persist selection
     localStorage.setItem("selectedMill", mill.id);
     localStorage.setItem("selectedMillName", mill.name);
 
-    // naviguer vers transport en passant la sélection
-    navigate("/transport", { state: { selectedMill: mill, propositions } });
+    const countryId =
+      location.state?.countryId || localStorage.getItem("selectedCountryId");
+
+    // Comportement spécifique selon l'usine
+    if (mill.id === "nm") {
+      // Niederauer Mühle -> on veut afficher uniquement les options "mill"
+      const millPropositions = [
+        "Ocean freight",
+        "THC Origin",
+        "Pre Carriage Niederauer Mühle",
+        "ALL IN BY CONTAINER",
+        "ALL IN BY TON",
+      ];
+
+      navigate("/transport", {
+        state: {
+          countryId,
+          selectedMill: mill,
+          propositions: millPropositions,
+          // allowedChoices restreint TransportChoicePage aux modes suivants
+          allowedChoices: ["fca-mill-truck", "fca-mill-container"],
+        },
+      });
+      return;
+    }
+
+    if (mill.id === "sp") {
+      // Smurfit Piteå -> on va directement au calcul
+      const spPropositions = [
+        "Ocean freight",
+        "ALL IN BY CONTAINER",
+        "ALL IN BY TON",
+      ];
+
+      navigate("/calcul", {
+        state: {
+          countryId,
+          selectedMill: mill,
+          propositions: spPropositions,
+        },
+      });
+      return;
+    }
+
+    // comportement par défaut : envoyer vers /transport
+    navigate("/transport", {
+      state: { countryId, selectedMill: mill, propositions },
+    });
   };
 
   return (

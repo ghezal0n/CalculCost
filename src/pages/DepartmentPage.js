@@ -12,12 +12,12 @@ const DepartmentPage = () => {
     {
       id: "181",
       name: "181",
-      clickable: true,
+      clickable: false,
     },
     {
       id: "183",
       name: "183",
-      clickable: true,
+      clickable: false,
     },
     {
       id: "185",

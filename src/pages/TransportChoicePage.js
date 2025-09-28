@@ -90,26 +90,63 @@ const TransportChoicePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Récupération des données depuis location.state et localStorage
   const countryId =
     location.state?.countryId ||
     localStorage.getItem("selectedCountryId") ||
     null;
 
+  // Récupération des allowedChoices depuis location.state ou localStorage
+  const allowedChoices =
+    location.state?.allowedChoices ||
+    JSON.parse(localStorage.getItem("allowedChoices") || "null") ||
+    null;
+
+  // Sauvegarde des données importantes dans localStorage
   useEffect(() => {
     if (location.state?.countryId) {
       localStorage.setItem("selectedCountryId", location.state.countryId);
     }
-  }, [location.state?.countryId]);
+    if (location.state?.allowedChoices) {
+      localStorage.setItem(
+        "allowedChoices",
+        JSON.stringify(location.state.allowedChoices)
+      );
+    }
+  }, [location.state]);
 
-  const filteredChoices =
-    countryId === "spain" || countryId === "usa" || countryId === "slovenia"
-      ? choices.filter(
-          (c) => c.key === "fca-port-truck" || c.key === "fob-container"
-        )
-      : choices;
+  // Logique de filtrage améliorée
+  const getFilteredChoices = () => {
+    console.log("Debug - countryId:", countryId);
+    console.log("Debug - allowedChoices:", allowedChoices);
+
+    // Si on a des allowedChoices spécifiques (venant de la page Usine), on les utilise en priorité
+    if (Array.isArray(allowedChoices) && allowedChoices.length > 0) {
+      console.log("Debug - Utilisation des allowedChoices:", allowedChoices);
+      return choices.filter((c) => allowedChoices.includes(c.key));
+    }
+
+    // Sinon, on applique le filtrage par pays (pour les pays sans page Usine)
+    if (
+      countryId === "spain" ||
+      countryId === "usa" ||
+      countryId === "slovenia"
+    ) {
+      console.log("Debug - Filtrage par pays pour:", countryId);
+      return choices.filter(
+        (c) => c.key === "fca-port-truck" || c.key === "fob-container"
+      );
+    }
+
+    // Par défaut, tous les choix
+    console.log("Debug - Tous les choix disponibles");
+    return choices;
+  };
+
+  const filteredChoices = getFilteredChoices();
 
   useEffect(() => {
-    // animation d'entrée similaire
+    // Animation d'entrée
     const cards = document.querySelectorAll(".choice-card");
     cards.forEach((card, index) => {
       card.style.opacity = "0";
@@ -120,7 +157,7 @@ const TransportChoicePage = () => {
         card.style.transform = "translateY(0)";
       }, index * 150);
     });
-  }, []);
+  }, [filteredChoices]); // Relancer l'animation quand filteredChoices change
 
   const buildPropositionsForChoice = (choiceKey) => {
     const millProps = [
@@ -159,13 +196,13 @@ const TransportChoicePage = () => {
 
     const propositions = buildPropositionsForChoice(choiceKey);
 
-    // -> TOUJOURS naviguer vers /calcul avec le payload nécessaire
     navigate("/calcul", {
       state: {
         countryId,
         selectedChoice: choiceKey,
         selectedChoiceLabel: choiceConfig[choiceKey],
         propositions,
+        allowedChoices, // Transmettre les allowedChoices pour maintenir la cohérence
       },
     });
   };

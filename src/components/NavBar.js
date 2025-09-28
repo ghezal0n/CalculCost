@@ -76,6 +76,71 @@ function Navbar() {
     navigate("/login", { replace: true });
   };
 
+  const handleNavItemClick = (item) => {
+    // Récupérer les données du contexte
+    const countryId =
+      location.state?.countryId || localStorage.getItem("selectedCountryId");
+    const allowedChoices =
+      location.state?.allowedChoices ||
+      JSON.parse(localStorage.getItem("allowedChoices") || "null");
+
+    if (item.path === "/usine" && countryId) {
+      // Même logique que dans handleStepClick pour /usine
+      const forbiddenCountries = [
+        "Spain",
+        "United States of America",
+        "Slovenia",
+      ];
+      const selectedCountry =
+        location.state?.countryName ||
+        localStorage.getItem("selectedCountryName");
+
+      if (forbiddenCountries.includes(selectedCountry)) {
+        alert("L'accès à l'étape Usine n'est pas disponible pour ce pays.");
+        return;
+      }
+
+      // Récupérer les propositions
+      let propositions = [];
+      try {
+        const storedPropositions = localStorage.getItem("usinePropositions");
+        if (storedPropositions) {
+          propositions = JSON.parse(storedPropositions);
+        }
+      } catch (e) {
+        console.error("Erreur lors de la récupération des propositions:", e);
+      }
+
+      if (!propositions || propositions.length === 0) {
+        propositions = [
+          { id: "nm", name: "Niederauer Mühle", clickable: true },
+          { id: "sp", name: "Smurfit Piteå", clickable: true },
+        ];
+      }
+
+      navigate(item.path, {
+        state: {
+          countryId: countryId,
+          propositions: propositions,
+        },
+      });
+    } else if (item.path === "/transport" && countryId) {
+      const navigationState = { countryId: countryId };
+      if (allowedChoices) {
+        navigationState.allowedChoices = allowedChoices;
+      }
+      navigate(item.path, { state: navigationState });
+    } else if (item.path === "/calcul" && countryId) {
+      const navigationState = { countryId: countryId };
+      if (allowedChoices) {
+        navigationState.allowedChoices = allowedChoices;
+      }
+      navigate(item.path, { state: navigationState });
+    } else {
+      navigate(item.path);
+    }
+  };
+
   // icone hamburger
   const MenuIcon = () => (
     <svg
@@ -356,14 +421,17 @@ function Navbar() {
               const isActive = location.pathname === item.path;
               return (
                 <li key={item.path}>
-                  <Link
-                    to={item.path}
-                    style={getLinkStyles(isActive)}
+                  <span
+                    onClick={() => handleNavItemClick(item)}
+                    style={{
+                      ...getLinkStyles(isActive),
+                      cursor: "pointer",
+                    }}
                     onMouseEnter={(e) => handleLinkHover(e, isActive)}
                     onMouseLeave={(e) => handleLinkLeave(e, isActive)}
                   >
                     {item.label}
-                  </Link>
+                  </span>
                 </li>
               );
             })}
@@ -452,14 +520,17 @@ function Navbar() {
               const isActive = location.pathname === item.path;
               return (
                 <li key={item.path} style={mobileMenuItemStyles}>
-                  <Link
-                    to={item.path}
-                    style={getLinkStyles(isActive, true)}
+                  <span
+                    onClick={() => handleNavItemClick(item)}
+                    style={{
+                      ...getLinkStyles(isActive, true),
+                      cursor: "pointer",
+                    }}
                     onMouseEnter={(e) => handleLinkHover(e, isActive)}
                     onMouseLeave={(e) => handleLinkLeave(e, isActive)}
                   >
                     {item.label}
-                  </Link>
+                  </span>
                 </li>
               );
             })}
