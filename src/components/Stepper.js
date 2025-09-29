@@ -132,7 +132,7 @@ function Stepper() {
     <div
       style={{
         backgroundColor: "#f8f9fa",
-        padding: "2rem",
+        padding: "1.5rem",
         boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
         width: "100vw",
         margin: 0,
@@ -205,7 +205,7 @@ function Stepper() {
                   <span
                     style={{
                       marginTop: "0.5rem",
-                      fontSize: "0.875rem",
+                      fontSize: "0.800rem",
                       color:
                         step.step === currentStepNumber ? "#007bff" : "#28a745",
                       fontWeight:

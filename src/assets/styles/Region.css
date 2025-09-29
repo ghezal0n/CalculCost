@@ -21,7 +21,7 @@ body {
 }
 
 .app-title {
-  font-size: 2.25rem;
+  font-size: 1.75rem;
   font-weight: 700;
   color: #1a202c;
   margin-bottom: 16px;
@@ -36,7 +36,7 @@ body {
 }
 
 .header-title h1 {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: bold;
   color: #1f2937;
   margin-left: 12px;
@@ -172,7 +172,7 @@ body {
   }
 
   .header-title h1 {
-    font-size: 2rem;
+    font-size: 1.75rem;
     margin-left: 8px;
   }
 
@@ -183,7 +183,7 @@ body {
   }
 
   .app-title {
-    font-size: 2rem;
+    font-size: 1.5rem;
     text-align: center;
   }
 
@@ -246,7 +246,7 @@ body {
 
   .header-title h1,
   .app-title {
-    font-size: 1.75rem;
+    font-size: 1.25rem;
   }
 
   .globe-icon,

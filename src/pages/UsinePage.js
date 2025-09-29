@@ -8,6 +8,11 @@ const UsinePage = () => {
 
   const propositions = location.state?.propositions || [];
 
+  const countryId =
+    location.state?.countryId ||
+    localStorage.getItem("selectedCountryId") ||
+    null;
+
   // Sauvegarder les propositions dans localStorage
   useEffect(() => {
     if (propositions && propositions.length > 0) {
@@ -101,6 +106,16 @@ const UsinePage = () => {
             <h1 className="app-title">Select your mill</h1>
           </div>
           <p className="app-subtitle">Choose a mill to access the calculator</p>
+          <span className="header-region-description">
+            Region :{" "}
+            {countryId === "usa"
+              ? "United States"
+              : countryId === "spain"
+              ? "Spain"
+              : countryId === "slovenia"
+              ? "Slovenia"
+              : "Belgium - Germany - Netherlands"}
+          </span>
         </header>
 
         <ul className="countries-list">

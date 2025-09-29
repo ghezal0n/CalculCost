@@ -350,7 +350,7 @@ function Navbar() {
     transition: "all 0.3s",
     fontWeight: isActive ? "bold" : "normal",
     display: "block",
-    fontSize: isMobileLink ? "1.1rem" : "1rem",
+    fontSize: isMobileLink ? "1rem" : "0.9rem",
     minHeight: isMobileLink ? "48px" : "auto",
     lineHeight: isMobileLink ? "48px" : "normal",
   });
@@ -443,7 +443,7 @@ function Navbar() {
               style={{
                 color: "white",
                 cursor: "pointer",
-                fontSize: "1rem",
+                fontSize: "0.9rem",
                 fontWeight: "500",
                 display: "flex",
                 alignItems: "center",

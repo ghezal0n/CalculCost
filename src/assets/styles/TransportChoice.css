@@ -119,8 +119,8 @@ body {
 
 /* Choice Icon Styles */
 .choice-icon {
-  width: 64px;
-  height: 64px;
+  width: 60px;
+  height: 60px;
   margin: 0 auto 24px;
   padding: 16px;
   border-radius: 50%;
@@ -167,7 +167,7 @@ body {
 
 /* Choice Content */
 .choice-title {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: #1f2937;
   margin-bottom: 12px;
@@ -359,7 +359,7 @@ body {
 
   /* Garde votre typographie de cartes */
   .choice-title {
-    font-size: 1.25rem;
+    font-size: 1.15rem;
     text-align: center;
   }
 
@@ -443,7 +443,7 @@ body {
   }
 
   .choice-title {
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
 
   .choice-description {

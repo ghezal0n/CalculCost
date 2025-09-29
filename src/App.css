@@ -24,16 +24,13 @@ html {
   padding: 0;
 }
 
-/* Modifiez .App pour prendre toute la largeur */
 .App {
   width: 100%;
   min-height: 100vh;
   margin: 0;
   padding: 0;
-  /* Supprimé text-align: center pour éviter de centrer tout le contenu */
 }
 
-/* Conservez vos animations si nécessaire */
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -45,7 +42,6 @@ html {
   }
 }
 
-/* Modifiez App-header pour ne pas prendre tout l'écran */
 .App-header {
   background-color: #282c34;
   padding: 2rem;
@@ -53,9 +49,8 @@ html {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  font-size: calc(8px + 1.5vmin);
   color: white;
-  /* Supprimé min-height: 100vh pour ne pas occuper tout l'écran */
 }
 
 .App-link {
@@ -71,7 +66,6 @@ html {
   }
 }
 
-/* Styles pour la navbar pleine largeur */
 .navbar-fullwidth {
   width: 100%;
   margin: 0;
@@ -79,14 +73,12 @@ html {
   box-sizing: border-box;
 }
 
-/* Container pour le contenu des pages */
 .page-content {
   width: 100%;
   padding: 2rem;
   box-sizing: border-box;
 }
 
-/* Si vous voulez centrer le contenu avec une largeur maximale */
 .page-content-centered {
   width: 100%;
   max-width: 1200px;

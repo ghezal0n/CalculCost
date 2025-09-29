@@ -232,7 +232,7 @@ const TransportChoicePage = () => {
           Click on a transport mode to access the calculator directly */}
           {countryId && (
             <span className="header-region-description">
-              Incoterm selected :{" "}
+              Region :{" "}
               {countryId === "usa"
                 ? "United States"
                 : countryId === "spain"
