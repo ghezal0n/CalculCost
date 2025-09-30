@@ -6,7 +6,7 @@ body {
 
 .app-container {
   min-height: 100vh;
-  padding: 24px;
+  padding: 12px;
 }
 
 .main-container {
@@ -72,7 +72,7 @@ body {
 }
 
 .item-content {
-  padding: 24px;
+  padding: 17px;
   max-width: 500px;
   min-width: 400px;
 }
@@ -160,7 +160,8 @@ body {
 
 @media (max-width: 768px) {
   .app-container {
-    padding: 16px;
+    padding: 13px;
+    /* 16px */
   }
 
   .main-container {
@@ -215,7 +216,7 @@ body {
   }
 
   .country-name {
-    font-size: 1.125rem;
+    font-size: 1rem;
     text-align: left;
   }
 

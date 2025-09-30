@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../assets/styles/Region.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const RegionPage = () => {
   const [currentPage, setCurrentPage] = useState(null);
+  const [selectedDepartment, setSelectedDepartment] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
+
   const countries = [
     {
       id: "belgium-germany",
@@ -18,7 +21,14 @@ const RegionPage = () => {
     { id: "france", name: "France", clickable: false },
   ];
 
-  // retourne la liste d'usines pour une région donnée (vide si aucune)
+  // récupérer le département sélectionné depuis localStorage
+  useEffect(() => {
+    const storedDepartment = localStorage.getItem("selectedMillName");
+    if (storedDepartment) {
+      setSelectedDepartment(storedDepartment);
+    }
+  }, []);
+
   const getPropositionsForRegion = (regionId) => {
     if (regionId === "belgium-germany") {
       return [
@@ -26,7 +36,6 @@ const RegionPage = () => {
         { id: "sp", name: "Smurfit Piteå", clickable: true },
       ];
     }
-    // exemple : si tu veux ajouter plus tard pour un autre pays -> else if...
     return [];
   };
 
@@ -35,14 +44,11 @@ const RegionPage = () => {
 
     const propositions = getPropositionsForRegion(country.id);
 
-    // persist selected country
     localStorage.setItem("selectedCountryId", country.id);
 
     if (propositions.length > 0) {
-      // il y a des usines -> on va sur la page Usine avec les propositions
       navigate("/usine", { state: { countryId: country.id, propositions } });
     } else {
-      // pas d'usine -> on va directement sur Transport
       navigate("/transport", { state: { countryId: country.id } });
     }
   };
@@ -70,6 +76,12 @@ const RegionPage = () => {
           <p className="app-subtitle">
             Choose a destination to access transport options
           </p>
+
+          {selectedDepartment && (
+            <p className="header-region-description">
+              Selected department: {selectedDepartment}
+            </p>
+          )}
         </header>
 
         <ul className="countries-list">

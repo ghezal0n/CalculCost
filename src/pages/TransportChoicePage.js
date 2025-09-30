@@ -90,13 +90,16 @@ const TransportChoicePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Récupération des données depuis location.state et localStorage
   const countryId =
     location.state?.countryId ||
     localStorage.getItem("selectedCountryId") ||
     null;
 
-  // Récupération des allowedChoices depuis location.state ou localStorage
+  const selectedMillName =
+    location.state?.selectedMill?.name ||
+    localStorage.getItem("selectedMillName") ||
+    null;
+
   const allowedChoices =
     location.state?.allowedChoices ||
     JSON.parse(localStorage.getItem("allowedChoices") || "null") ||
@@ -115,24 +118,22 @@ const TransportChoicePage = () => {
     }
   }, [location.state]);
 
-  // Logique de filtrage améliorée
+  // filtrage améliorée
   const getFilteredChoices = () => {
-    console.log("Debug - countryId:", countryId);
-    console.log("Debug - allowedChoices:", allowedChoices);
+    console.log("countryId:", countryId);
+    console.log("allowedChoices:", allowedChoices);
 
-    // Si on a des allowedChoices spécifiques (venant de la page Usine), on les utilise en priorité
     if (Array.isArray(allowedChoices) && allowedChoices.length > 0) {
       console.log("Debug - Utilisation des allowedChoices:", allowedChoices);
       return choices.filter((c) => allowedChoices.includes(c.key));
     }
 
-    // Sinon, on applique le filtrage par pays (pour les pays sans page Usine)
     if (
       countryId === "spain" ||
       countryId === "usa" ||
       countryId === "slovenia"
     ) {
-      console.log("Debug - Filtrage par pays pour:", countryId);
+      console.log("filtrage par pays pour:", countryId);
       return choices.filter(
         (c) => c.key === "fca-port-truck" || c.key === "fob-container"
       );
@@ -226,13 +227,14 @@ const TransportChoicePage = () => {
           </svg>
           <h1>Transport Mode</h1>
         </div>
-        {/* <p className="header-subtitle">Choisissez votre mode de livraison préféré</p> */}
+        <p className="header-subtitle">Select your preferred delivery method</p>
         <p className="header-description">
           {/*           
           Click on a transport mode to access the calculator directly */}
+
           {countryId && (
-            <span className="header-region-description">
-              Region :{" "}
+            <span className="header-mode-description">
+              Region:{" "}
               {countryId === "usa"
                 ? "United States"
                 : countryId === "spain"
@@ -242,6 +244,10 @@ const TransportChoicePage = () => {
                 : "Belgium - Germany - Netherlands"}
             </span>
           )}
+          <p className="header-region-description">
+            Selected factory:{" "}
+            {selectedMillName ? selectedMillName : "No factory selected"}
+          </p>
         </p>
       </div>
 

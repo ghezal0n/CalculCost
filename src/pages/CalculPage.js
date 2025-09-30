@@ -105,7 +105,7 @@ const CalculPage = () => {
     // Ajouter le nouvel élément au début
     const updatedHistory = [historyItem, ...existingHistory];
 
-    // Limiter à 50 éléments maximum
+    // 50 éléments max
     const limitedHistory = updatedHistory.slice(0, 50);
 
     // Sauvegarder
@@ -134,6 +134,10 @@ const CalculPage = () => {
     });
     return koperData;
   }
+  const selectedMillName =
+    location.state?.selectedMill?.name ||
+    localStorage.getItem("selectedMillName") ||
+    null;
 
   // Sélectionner les données selon le pays
   const getCurrentFreightData = () => {
@@ -904,17 +908,8 @@ const CalculPage = () => {
             <Ship className="ship-icon" />
             <h1>Freight Calculator</h1>
           </div>
-          <p className="header-subtitle">
-            Compare offers from multiple carriers
-          </p>
-          {selectedFCAMode && (
-            <p className="header-mode-description">
-              Selected mode:{" "}
-              {localStorage.getItem("selectedFCAModeLabel") || selectedFCAMode}
-            </p>
-          )}
           {countryId && (
-            <p className="header-region-description">
+            <p className="header-subtitle">
               Region:
               {countryId === "usa"
                 ? " United States"
@@ -923,6 +918,16 @@ const CalculPage = () => {
                 : countryId === "slovenia"
                 ? " Slovenia"
                 : " Belgium - Germany - Netherlands"}
+            </p>
+          )}
+          <p className="header-mode-description">
+            Selected factory:{" "}
+            {selectedMillName ? selectedMillName : "No factory selected"}
+          </p>
+          {selectedFCAMode && (
+            <p className="header-region-description">
+              Selected mode:{" "}
+              {localStorage.getItem("selectedFCAModeLabel") || selectedFCAMode}
             </p>
           )}
         </div>
