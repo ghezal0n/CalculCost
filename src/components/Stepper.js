@@ -44,15 +44,11 @@ function Stepper() {
       JSON.parse(localStorage.getItem("allowedChoices") || "null");
 
     if (step.path === "/transport") {
-      // Pour la page transport, on doit conserver le countryId ET les allowedChoices
       if (countryId) {
         const navigationState = { countryId: countryId };
-
-        // Ajouter allowedChoices si disponibles
         if (allowedChoices) {
           navigationState.allowedChoices = allowedChoices;
         }
-
         navigate(step.path, { state: navigationState });
       } else {
         navigate("/");
@@ -60,12 +56,9 @@ function Stepper() {
     } else if (step.path === "/calcul") {
       if (countryId) {
         const navigationState = { countryId: countryId };
-
-        // Ajouter allowedChoices si disponibles
         if (allowedChoices) {
           navigationState.allowedChoices = allowedChoices;
         }
-
         navigate(step.path, { state: navigationState });
       } else {
         navigate("/");
@@ -82,12 +75,10 @@ function Stepper() {
           localStorage.getItem("selectedCountryName");
 
         if (forbiddenCountries.includes(selectedCountry)) {
-          // bloquer l'accès à /usine
           alert("L'accès à l'étape Usine n'est pas disponible pour ce pays.");
-          return; // on ne fait rien
+          return;
         }
 
-        // Récupérer les propositions depuis localStorage ou créer les propositions par défaut
         let propositions = [];
         try {
           const storedPropositions = localStorage.getItem("usinePropositions");
@@ -98,7 +89,6 @@ function Stepper() {
           console.error("Erreur lors de la récupération des propositions:", e);
         }
 
-        // Si pas de propositions stockées, créer les propositions par défaut
         if (!propositions || propositions.length === 0) {
           propositions = [
             {
@@ -144,8 +134,9 @@ function Stepper() {
         marginRight: "-50vw",
       }}
     >
-      {/* Stepper */}
+      {/* Stepper Desktop */}
       <div
+        className="stepper-desktop"
         style={{
           display: "flex",
           alignItems: "center",
@@ -156,7 +147,6 @@ function Stepper() {
       >
         {steps.map((step, index) => (
           <React.Fragment key={step.path}>
-            {/* Step Circle */}
             <div
               style={{
                 display: "flex",
@@ -259,7 +249,6 @@ function Stepper() {
               )}
             </div>
 
-            {/* Connecting Line */}
             {index < steps.length - 1 && (
               <div
                 style={{
@@ -275,6 +264,165 @@ function Stepper() {
           </React.Fragment>
         ))}
       </div>
+
+      {/* Stepper Mobile - Affichage des 5 étapes */}
+      <div className="stepper-mobile" style={{ display: "none" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "0.25rem",
+            padding: "0 0.5rem",
+          }}
+        >
+          {steps.map((step, index) => (
+            <React.Fragment key={step.path}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  flex: "0 0 auto",
+                }}
+              >
+                {step.step <= currentStepNumber ? (
+                  <div
+                    onClick={() => handleStepClick(step)}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "32px",
+                        height: "32px",
+                        borderRadius: "50%",
+                        backgroundColor: "#28a745",
+                        color: "white",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontWeight: "bold",
+                        fontSize: "0.875rem",
+                        border:
+                          step.step === currentStepNumber
+                            ? "2px solid #007bff"
+                            : "none",
+                        boxShadow:
+                          step.step === currentStepNumber
+                            ? "0 0 0 2px rgba(0,123,255,0.25)"
+                            : "none",
+                      }}
+                    >
+                      {step.step < currentStepNumber ? "✓" : step.step}
+                    </div>
+                    <span
+                      style={{
+                        marginTop: "0.25rem",
+                        fontSize: "0.625rem",
+                        color:
+                          step.step === currentStepNumber
+                            ? "#007bff"
+                            : "#28a745",
+                        fontWeight:
+                          step.step === currentStepNumber ? "bold" : "normal",
+                        textAlign: "center",
+                        maxWidth: "50px",
+                        lineHeight: "1.2",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      {step.label}
+                    </span>
+                  </div>
+                ) : (
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "32px",
+                        height: "32px",
+                        borderRadius: "50%",
+                        backgroundColor: "#dee2e6",
+                        color: "#6c757d",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontWeight: "bold",
+                        fontSize: "0.875rem",
+                        opacity: "0.6",
+                      }}
+                    >
+                      {step.step}
+                    </div>
+                    <span
+                      style={{
+                        marginTop: "0.25rem",
+                        fontSize: "0.625rem",
+                        color: "#6c757d",
+                        textAlign: "center",
+                        maxWidth: "50px",
+                        lineHeight: "1.2",
+                        opacity: "0.6",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      {step.label}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {index < steps.length - 1 && (
+                <div
+                  style={{
+                    flex: "1 1 auto",
+                    height: "2px",
+                    backgroundColor:
+                      step.step < currentStepNumber ? "#28a745" : "#dee2e6",
+                    minWidth: "8px",
+                    maxWidth: "30px",
+                    marginTop: "-16px",
+                  }}
+                />
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .stepper-desktop {
+            display: none !important;
+          }
+          .stepper-mobile {
+            display: block !important;
+          }
+        }
+        
+        @media (min-width: 769px) {
+          .stepper-desktop {
+            display: flex !important;
+          }
+          .stepper-mobile {
+            display: none !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
