@@ -64,55 +64,43 @@ function Stepper() {
         navigate("/");
       }
     } else if (step.path === "/usine") {
-      if (countryId) {
-        const forbiddenCountries = [
-          "Spain",
-          "United States of America",
-          "Slovenia",
-        ];
-        const selectedCountry =
-          location.state?.countryName ||
-          localStorage.getItem("selectedCountryName");
-
-        if (forbiddenCountries.includes(selectedCountry)) {
-          alert("L'accès à l'étape Usine n'est pas disponible pour ce pays.");
-          return;
-        }
-
-        let propositions = [];
-        try {
-          const storedPropositions = localStorage.getItem("usinePropositions");
-          if (storedPropositions) {
-            propositions = JSON.parse(storedPropositions);
-          }
-        } catch (e) {
-          console.error("Erreur lors de la récupération des propositions:", e);
-        }
-
-        if (!propositions || propositions.length === 0) {
-          propositions = [
-            {
-              id: "nm",
-              name: "Niederauer Mühle",
-              clickable: true,
-            },
-            {
-              id: "sp",
-              name: "Smurfit Piteå",
-              clickable: true,
-            },
-          ];
-        }
-
-        navigate(step.path, {
-          state: {
-            countryId: countryId,
-            propositions: propositions,
-          },
-        });
-      } else {
-        navigate("/");
+      // bloquer l'accès
+      if (countryId !== "belgium-germany") {
+        return;
       }
+
+      // sinon
+      let propositions = [];
+      try {
+        const storedPropositions = localStorage.getItem("usinePropositions");
+        if (storedPropositions) {
+          propositions = JSON.parse(storedPropositions);
+        }
+      } catch (e) {
+        console.error("Erreur lors de la récupération des propositions:", e);
+      }
+
+      if (!propositions || propositions.length === 0) {
+        propositions = [
+          {
+            id: "nm",
+            name: "Niederauer Mühle",
+            clickable: true,
+          },
+          {
+            id: "sp",
+            name: "Smurfit Piteå",
+            clickable: true,
+          },
+        ];
+      }
+
+      navigate(step.path, {
+        state: {
+          countryId: countryId,
+          propositions: propositions,
+        },
+      });
     } else {
       navigate(step.path);
     }
@@ -265,7 +253,7 @@ function Stepper() {
         ))}
       </div>
 
-      {/* Stepper Mobile - Affichage des 5 étapes */}
+      {/* Stepper Mobile - Affichage des étapes */}
       <div className="stepper-mobile" style={{ display: "none" }}>
         <div
           style={{

@@ -123,11 +123,6 @@ const TransportChoicePage = () => {
     console.log("countryId:", countryId);
     console.log("allowedChoices:", allowedChoices);
 
-    if (Array.isArray(allowedChoices) && allowedChoices.length > 0) {
-      console.log("Debug - Utilisation des allowedChoices:", allowedChoices);
-      return choices.filter((c) => allowedChoices.includes(c.key));
-    }
-
     if (
       countryId === "spain" ||
       countryId === "usa" ||
@@ -139,8 +134,12 @@ const TransportChoicePage = () => {
       );
     }
 
-    // Par défaut, tous les choix
-    console.log("Debug - Tous les choix disponibles");
+    // pour Belgium-Germany
+    if (Array.isArray(allowedChoices) && allowedChoices.length > 0) {
+      console.log("allowedChoices:", allowedChoices);
+      return choices.filter((c) => allowedChoices.includes(c.key));
+    }
+    console.log("tous les choix disponibles");
     return choices;
   };
 
