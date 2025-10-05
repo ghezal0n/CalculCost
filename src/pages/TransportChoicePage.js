@@ -232,7 +232,7 @@ const TransportChoicePage = () => {
           Click on a transport mode to access the calculator directly */}
 
           {countryId && (
-            <span className="header-mode-description">
+            <span className="header-region-description">
               Region:{" "}
               {countryId === "usa"
                 ? "United States"
@@ -243,10 +243,10 @@ const TransportChoicePage = () => {
                 : "Belgium - Germany - Netherlands"}
             </span>
           )}
-          <p className="header-region-description">
+          {/* <p className="header-region-description">
             Selected factory:{" "}
             {selectedMillName ? selectedMillName : "No factory selected"}
-          </p>
+          </p> */}
         </p>
       </div>
 

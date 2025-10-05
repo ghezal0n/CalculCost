@@ -920,10 +920,10 @@ const CalculPage = () => {
                 : " Belgium - Germany - Netherlands"}
             </p>
           )}
-          <p className="header-mode-description">
+          {/* <p className="header-mode-description">
             Selected factory:{" "}
             {selectedMillName ? selectedMillName : "No factory selected"}
-          </p>
+          </p> */}
           {selectedFCAMode && (
             <p className="header-region-description">
               Selected mode:{" "}
