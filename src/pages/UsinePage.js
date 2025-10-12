@@ -40,7 +40,6 @@ const UsinePage = () => {
 
     // Comportement spécifique selon l'usine
     if (mill.id === "nm") {
-      // Niederauer Mühle -> on veut afficher uniquement les options "mill"
       const millPropositions = [
         "Ocean freight",
         "THC Origin",
@@ -54,7 +53,6 @@ const UsinePage = () => {
           countryId,
           selectedMill: mill,
           propositions: millPropositions,
-          // allowedChoices restreint TransportChoicePage aux modes suivants
           allowedChoices: ["fca-mill-truck", "fca-mill-container"],
         },
       });
@@ -62,7 +60,8 @@ const UsinePage = () => {
     }
 
     if (mill.id === "sp") {
-      // Smurfit Piteå -> on va directement au calcul
+      localStorage.setItem("selectedFCAMode", "cip-terneuzen");
+      localStorage.setItem("selectedFCAModeLabel", "CIP Terneuzen");
       const spPropositions = [
         "Ocean freight",
         "ALL IN BY CONTAINER",
@@ -74,6 +73,22 @@ const UsinePage = () => {
           countryId,
           selectedMill: mill,
           propositions: spPropositions,
+        },
+      });
+      return;
+    }
+
+    if (mill.id === "other") {
+      navigate("/transport", {
+        state: {
+          countryId,
+          selectedMill: mill,
+          allowedChoices: [
+            "fca-port-truck",
+            "fob-container",
+            "fca-mill-truck",
+            "fca-mill-container",
+          ],
         },
       });
       return;

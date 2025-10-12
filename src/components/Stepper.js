@@ -21,7 +21,7 @@ function Stepper() {
   const steps = [
     { path: "/", label: "Department", step: 1 },
     { path: "/region", label: "Region", step: 2 },
-    { path: "/usine", label: "Usine", step: 3 },
+    { path: "/usine", label: "Mill", step: 3 },
     { path: "/transport", label: "Transport", step: 4 },
     { path: "/calcul", label: "Calcul", step: 5 },
   ];
@@ -90,6 +90,11 @@ function Stepper() {
           {
             id: "sp",
             name: "Smurfit Piteå",
+            clickable: true,
+          },
+          {
+            id: "other",
+            name: "Other",
             clickable: true,
           },
         ];

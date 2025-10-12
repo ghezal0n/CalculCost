@@ -34,6 +34,7 @@ const RegionPage = () => {
       return [
         { id: "nm", name: "Niederauer Mühle", clickable: true },
         { id: "sp", name: "Smurfit Piteå", clickable: true },
+        { id: "other", name: "Other", clickable: true },
       ];
     }
     return [];

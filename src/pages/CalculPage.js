@@ -524,9 +524,7 @@ const CalculPage = () => {
                 </td>
               </tr>
 
-              {/* Affichage conditionnel selon le type de calcul */}
               {calculation.calculationType === "smurfit-antwerp" ? (
-                // Special display for Smurfit Piteå with Antwerp origin
                 <>
                   <tr>
                     <td className="table-label">THC Origin</td>

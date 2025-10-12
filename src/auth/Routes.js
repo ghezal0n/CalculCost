@@ -6,6 +6,7 @@ import HistoriquePage from "../pages/HistoriquePage";
 import UsinePage from "../pages/UsinePage";
 import LoginForm from "../auth/LoginForm";
 import DepartmentPage from "../pages/DepartmentPage.js";
+import MapPage from "../pages/MapPage.js";
 
 const routes = [
   { path: "/", element: <DepartmentPage /> },
@@ -15,6 +16,7 @@ const routes = [
   { path: "/transport", element: <TransportChoicePage /> },
   { path: "/calcul", element: <CalculPage /> },
   { path: "/historique", element: <HistoriquePage /> },
+  { path: "/map", element: <MapPage /> },
 ];
 
 export default routes;

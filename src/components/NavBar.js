@@ -52,6 +52,7 @@ function Navbar() {
     "/transport",
     "/calcul",
     "/historique",
+    //"/map",
   ];
 
   if (!allowedPaths.includes(location.pathname)) {
@@ -61,10 +62,11 @@ function Navbar() {
   const navItems = [
     { path: "/department", label: "Department" },
     { path: "/region", label: "Region" },
-    { path: "/usine", label: "Usine" },
+    { path: "/usine", label: "Mill" },
     { path: "/transport", label: "Transport" },
     { path: "/calcul", label: "Calcul" },
     { path: "/historique", label: "Historique" },
+    //{ path: "/map", label: "Map" },
   ];
 
   const toggleMobileMenu = () => {
@@ -85,7 +87,6 @@ function Navbar() {
       JSON.parse(localStorage.getItem("allowedChoices") || "null");
 
     if (item.path === "/usine" && countryId) {
-      // Même logique que dans handleStepClick pour /usine
       const forbiddenCountries = [
         "Spain",
         "United States of America",
@@ -100,7 +101,6 @@ function Navbar() {
         return;
       }
 
-      // Récupérer les propositions
       let propositions = [];
       try {
         const storedPropositions = localStorage.getItem("usinePropositions");
@@ -115,6 +115,7 @@ function Navbar() {
         propositions = [
           { id: "nm", name: "Niederauer Mühle", clickable: true },
           { id: "sp", name: "Smurfit Piteå", clickable: true },
+          { id: "other", name: "Other", clickable: true },
         ];
       }
 

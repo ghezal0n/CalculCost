@@ -134,7 +134,7 @@ const TransportChoicePage = () => {
       );
     }
 
-    // pour Belgium-Germany
+    // Belgium-Germany-Netherlands
     if (Array.isArray(allowedChoices) && allowedChoices.length > 0) {
       console.log("allowedChoices:", allowedChoices);
       return choices.filter((c) => allowedChoices.includes(c.key));
