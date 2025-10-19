@@ -77,6 +77,23 @@ const UsinePage = () => {
       });
       return;
     }
+    if (mill.id === "sv") {
+      localStorage.setItem("selectedFCAModeLabel", "Verzuolo");
+      const spPropositions = [
+        "Ocean freight",
+        "ALL IN BY CONTAINER",
+        "ALL IN BY TON",
+      ];
+
+      navigate("/calcul", {
+        state: {
+          countryId,
+          selectedMill: mill,
+          propositions: spPropositions,
+        },
+      });
+      return;
+    }
 
     if (mill.id === "other") {
       navigate("/transport", {
@@ -129,6 +146,8 @@ const UsinePage = () => {
               ? "Spain"
               : countryId === "slovenia"
               ? "Slovenia"
+              : countryId === "italy"
+              ? "Italy"
               : "Belgium - Germany - Netherlands"}
           </span>
         </header>

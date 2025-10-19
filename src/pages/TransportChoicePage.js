@@ -126,7 +126,8 @@ const TransportChoicePage = () => {
     if (
       countryId === "spain" ||
       countryId === "usa" ||
-      countryId === "slovenia"
+      countryId === "slovenia" ||
+      countryId === "italy"
     ) {
       console.log("filtrage par pays pour:", countryId);
       return choices.filter(
@@ -240,6 +241,8 @@ const TransportChoicePage = () => {
                 ? "Spain"
                 : countryId === "slovenia"
                 ? "Slovenia"
+                : countryId === "italy"
+                ? "Italy"
                 : "Belgium - Germany - Netherlands"}
             </span>
           )}

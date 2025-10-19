@@ -91,6 +91,7 @@ function Navbar() {
         "Spain",
         "United States of America",
         "Slovenia",
+        "Italy",
       ];
       const selectedCountry =
         location.state?.countryName ||

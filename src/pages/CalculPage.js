@@ -7,6 +7,7 @@ import {
   koperFreightData,
   spainFreightData,
   usaFreightData,
+  verzuoloFreightData,
 } from "./Data.js";
 import ARKAS from "../assets/images/ARKAS-Line.webp";
 import CMA_CGM from "../assets/images/CMA_CGM.png";
@@ -124,6 +125,17 @@ const CalculPage = () => {
     return spainData;
   }
 
+  function getVerzuoloFreightData() {
+    const verzuoloData = [];
+    verzuoloFreightData.forEach((route) => {
+      verzuoloData.push({
+        ...route,
+        origin: "Verzuolo",
+      });
+    });
+    return verzuoloData;
+  }
+
   function getKoperFreightData() {
     const koperData = [];
     koperFreightData.forEach((route) => {
@@ -147,6 +159,8 @@ const CalculPage = () => {
       return usaFreightData;
     } else if (countryId === "slovenia") {
       return getKoperFreightData();
+    } else if (countryId === "italy") {
+      return getVerzuoloFreightData();
     }
     return freightData; //benelux-germany
   };
@@ -199,6 +213,14 @@ const CalculPage = () => {
     tonWeight: 24,
   };
 
+  const fixedRatesVerzuolo = {
+    thcOrigin: 200.0,
+    preCarriageToAntwerp: 425.0,
+    lashingAndSecuring: 75.0,
+    stuffingRate: 7.6,
+    tonWeight: 24,
+  };
+
   // Extraire les valeurs uniques
   const origins = [...new Set(currentFreightData.map((item) => item.origin))];
 
@@ -229,6 +251,8 @@ const CalculPage = () => {
       defaultOrigin = origins[0];
     } else if (countryId === "slovenia" && origins.includes("Koper")) {
       defaultOrigin = "Koper";
+    } else if (countryId === "italy" && origins.length === 1) {
+      defaultOrigin = origins[0];
     }
 
     if (defaultOrigin && !formData.origin) {
@@ -304,6 +328,8 @@ const CalculPage = () => {
       fixedRates = fixedRatesKoper;
     } else if (origin === "Hamburg") {
       fixedRates = fixedRatesHamburg;
+    } else if (countryId === "italy") {
+      fixedRates = fixedRatesVerzuolo;
     } else {
       fixedRates = fixedRatesAntwerp;
     }
@@ -430,7 +456,30 @@ const CalculPage = () => {
         calculation.allInByContainer / fixedRates.tonWeight;
       return calculation;
     }
+    if (
+      countryId === "italy" &&
+      selectedMill === "sv" &&
+      origin === "Verzuolo"
+    ) {
+      calculation = {
+        ...calculation,
+        preCarriageToAntwerp: fixedRates.preCarriageToAntwerp,
+        lashingAndSecuring: fixedRates.lashingAndSecuring,
+        stuffingRate: fixedRates.stuffingRate,
+        stuffingTotal: fixedRates.stuffingRate * fixedRates.tonWeight,
+        allInByContainer:
+          calculation.oceanFreight +
+          fixedRates.thcOrigin +
+          fixedRates.preCarriageToAntwerp +
+          fixedRates.lashingAndSecuring +
+          fixedRates.stuffingRate * fixedRates.tonWeight,
+        calculationType: "verzuolo",
+      };
 
+      calculation.allInByTon =
+        calculation.allInByContainer / fixedRates.tonWeight;
+      return calculation;
+    }
     if (calculationType === "mill-container") {
       //FCA Mill in Container : Ocean freight + THC Origin + Pre Carriage Niederauer Mühle
       calculation = {
@@ -693,6 +742,55 @@ const CalculPage = () => {
                     </td>
                   </tr>
                 </>
+              ) : calculation.calculationType === "verzuolo" ? (
+                <>
+                  <tr>
+                    <td className="table-label">THC Origin</td>
+                    <td className="table-value">
+                      {calculation.thcOrigin.toLocaleString("fr-FR", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}{" "}
+                      {getCurrency()}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="table-label">Pre Carriage to Antwerp</td>
+                    <td className="table-value">
+                      {calculation.preCarriageToAntwerp.toLocaleString(
+                        "fr-FR",
+                        {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        }
+                      )}{" "}
+                      {getCurrency()}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="table-label">Lashing and Securing</td>
+                    <td className="table-value">
+                      {calculation.lashingAndSecuring.toLocaleString("fr-FR", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}{" "}
+                      {getCurrency()}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="table-label">
+                      Stuffing: {calculation.stuffingRate}€ ×{" "}
+                      {calculation.tonWeight} tons
+                    </td>
+                    <td className="table-value">
+                      {calculation.stuffingTotal.toLocaleString("fr-FR", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}{" "}
+                      {getCurrency()}
+                    </td>
+                  </tr>
+                </>
               ) : countryId === "usa" ? (
                 // Affichage spécial pour les USA
                 <>
@@ -915,6 +1013,8 @@ const CalculPage = () => {
                 ? " Spain"
                 : countryId === "slovenia"
                 ? " Slovenia"
+                : countryId === "italy"
+                ? "Italy"
                 : " Belgium - Germany - Netherlands"}
             </p>
           )}

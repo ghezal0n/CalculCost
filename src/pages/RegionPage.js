@@ -17,7 +17,7 @@ const RegionPage = () => {
     { id: "spain", name: "Spain", clickable: true },
     { id: "usa", name: "United States of America", clickable: true },
     { id: "slovenia", name: "Slovenia", clickable: true },
-    { id: "italy", name: "Italy", clickable: false },
+    { id: "italy", name: "Italy", clickable: true },
     { id: "france", name: "France", clickable: false },
   ];
 
@@ -36,6 +36,8 @@ const RegionPage = () => {
         { id: "sp", name: "Smurfit Piteå", clickable: true },
         { id: "other", name: "Other", clickable: true },
       ];
+    } else if (regionId === "italy") {
+      return [{ id: "sv", name: "Smurfit Verzuolo", clickable: true }];
     }
     return [];
   };
