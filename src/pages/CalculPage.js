@@ -167,6 +167,64 @@ const CalculPage = () => {
 
   const currentFreightData = getCurrentFreightData();
 
+  const getBaseDestination = (destination) => {
+    if (!destination) return "";
+    const upperDestination = destination.toUpperCase().trim();
+
+    const multiWordDestinations = [
+      "ABU DHABI",
+      "ASUNCION",
+      "CAPE TOWN",
+      "CAACUPEMI ASUNCION",
+      "DAR ES SALAAM",
+      "DEJN DEJN",
+      "EL KHOMS",
+      "FORT DE FRANCE",
+      "HO CHI MINH",
+      "HONG KONG",
+      "IZMIR ALSANCAK",
+      "JEBEL ALI",
+      "KIAMARI KARACHI",
+      "KING ABDULLAH",
+      "LA GUAIRA",
+      "LAEM CHABANG",
+      "LOS ANGELES",
+      "NEW YORK",
+      "PORT ELIZABETH",
+      "PORT KLANG",
+      "PORT LOUIS",
+      "PORT SAID",
+      "PORT SUDAN",
+      "PORT QASIM",
+      "PUERTO CABELLO",
+      "RIO DE JANEIRO",
+      "SAN ANTONIO",
+      "SAN FRANCISCO",
+      "TIN CAN",
+      "UMM QASR",
+    ];
+
+    for (const name of multiWordDestinations) {
+      if (upperDestination.includes(name)) {
+        return name;
+      }
+    }
+
+    const baseName = destination
+      .split(" ")[0]
+      .split(" -")[0]
+      .split("-")[0]
+      .split(",")[0]
+      .split("(")[0]
+      .split("io")[0]
+      .split(" VIA ")[0]
+      .split("contr")[0]
+      .split("spot")[0]
+      .trim();
+
+    return baseName;
+  };
+
   const fixedRatesAntwerp = {
     thcOrigin: 200.0,
     containerPreCollection: 255.0,
@@ -264,7 +322,9 @@ const CalculPage = () => {
   }, [origins, countryId, formData.origin, location.state]);
 
   const destinations = [
-    ...new Set(currentFreightData.map((item) => item.destination)),
+    ...new Set(
+      currentFreightData.map((item) => getBaseDestination(item.destination))
+    ),
   ].sort();
 
   useEffect(() => {
@@ -287,7 +347,7 @@ const CalculPage = () => {
     const matchingRoutes = currentFreightData.filter(
       (route) =>
         route.origin === formData.origin &&
-        route.destination === formData.destination
+        getBaseDestination(route.destination) === formData.destination
     );
 
     setAvailableRoutes(matchingRoutes);
@@ -463,21 +523,10 @@ const CalculPage = () => {
     ) {
       calculation = {
         ...calculation,
-        preCarriageToAntwerp: fixedRates.preCarriageToAntwerp,
-        lashingAndSecuring: fixedRates.lashingAndSecuring,
-        stuffingRate: fixedRates.stuffingRate,
-        stuffingTotal: fixedRates.stuffingRate * fixedRates.tonWeight,
-        allInByContainer:
-          calculation.oceanFreight +
-          fixedRates.thcOrigin +
-          fixedRates.preCarriageToAntwerp +
-          fixedRates.lashingAndSecuring +
-          fixedRates.stuffingRate * fixedRates.tonWeight,
+        allInByContainer: calculation.oceanFreight,
+        allInByTon: calculation.oceanFreight / fixedRates.tonWeight,
         calculationType: "verzuolo",
       };
-
-      calculation.allInByTon =
-        calculation.allInByContainer / fixedRates.tonWeight;
       return calculation;
     }
     if (calculationType === "mill-container") {
@@ -556,6 +605,12 @@ const CalculPage = () => {
             Proposal {index + 1}
           </h3>
           <div className="carrier-badge">{route.carrier}</div>
+        </div>
+
+        <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+          <p className="text-sm font-medium text-blue-900">
+            📍 {route.destination}
+          </p>
         </div>
 
         {/* Tableau de calcul */}
@@ -742,56 +797,8 @@ const CalculPage = () => {
                     </td>
                   </tr>
                 </>
-              ) : calculation.calculationType === "verzuolo" ? (
-                <>
-                  <tr>
-                    <td className="table-label">THC Origin</td>
-                    <td className="table-value">
-                      {calculation.thcOrigin.toLocaleString("fr-FR", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}{" "}
-                      {getCurrency()}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="table-label">Pre Carriage to Antwerp</td>
-                    <td className="table-value">
-                      {calculation.preCarriageToAntwerp.toLocaleString(
-                        "fr-FR",
-                        {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        }
-                      )}{" "}
-                      {getCurrency()}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="table-label">Lashing and Securing</td>
-                    <td className="table-value">
-                      {calculation.lashingAndSecuring.toLocaleString("fr-FR", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}{" "}
-                      {getCurrency()}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="table-label">
-                      Stuffing: {calculation.stuffingRate}€ ×{" "}
-                      {calculation.tonWeight} tons
-                    </td>
-                    <td className="table-value">
-                      {calculation.stuffingTotal.toLocaleString("fr-FR", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}{" "}
-                      {getCurrency()}
-                    </td>
-                  </tr>
-                </>
-              ) : countryId === "usa" ? (
+              ) : calculation.calculationType ===
+                "verzuolo" ? null : countryId === "usa" ? (
                 // Affichage spécial pour les USA
                 <>
                   {route.origin === "Savannah" && (

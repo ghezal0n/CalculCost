@@ -15,10 +15,10 @@ const RegionPage = () => {
       clickable: true,
     },
     { id: "spain", name: "Spain", clickable: true },
-    { id: "usa", name: "United States of America", clickable: true },
-    { id: "slovenia", name: "Slovenia", clickable: true },
     { id: "italy", name: "Italy", clickable: true },
-    { id: "france", name: "France", clickable: false },
+    { id: "usa", name: "USA", clickable: true },
+    { id: "slovenia", name: "Slovenia", clickable: true },
+    // { id: "france", name: "France", clickable: false },
   ];
 
   // récupérer le département sélectionné depuis localStorage
