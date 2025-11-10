@@ -992,6 +992,7 @@ export const freightData = [
     validUntil: "12/31/2025",
   },
 ];
+
 export const spainFreightData = [
   {
     destination: "ALEXANDRIA",
