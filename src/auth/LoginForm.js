@@ -3,7 +3,6 @@ import "../assets/styles/Login.css";
 import "../assets/images/LogoRoxcel.png";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
-import { Link } from "react-router-dom";
 import axios from "axios";
 
 const LoginForm = ({ onLoginSuccess }) => {
@@ -12,7 +11,7 @@ const LoginForm = ({ onLoginSuccess }) => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
