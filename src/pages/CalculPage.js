@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Ship, Calculator, MapPin } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import "../assets/styles/CalculPage.css";
+import { getRates } from "./ratesConfig"; // ← reads admin overrides from localStorage
 import {
   freightData,
   koperFreightData,
@@ -225,59 +226,21 @@ const CalculPage = () => {
     return baseName;
   };
 
-  const fixedRatesAntwerp = {
-    thcOrigin: 200.0,
-    containerPreCollection: 255.0,
-    stowage: 237.5,
-    preCarriageNiederauer: 675.0,
-    preCarriageDurenKreuzau: 540.0,
-    tonWeight: 24,
-  };
+  // ── Dynamic rates (admin-editable via /admin/rates) ────────────
+  const _rates = getRates();
 
-  const fixedRatesHamburg = {
-    thcOrigin: 250.0,
-    stowage: 650.0,
-    preCarriageNiederauer: 675.0,
-    tonWeight: 24,
-  };
-
-  const fixedRatesSpain = {
-    thcOrigin: 150.0,
-    stowage: 400.0,
-    preCarriageNiederauer: 500.0,
-    tonWeight: 24,
-  };
+  const fixedRatesAntwerp = _rates.antwerp;
+  const fixedRatesHamburg = _rates.hamburg;
+  const fixedRatesSpain = _rates.spain;
+  const fixedRatesKoper = _rates.koper;
+  const fixedRatesVerzuolo = _rates.verzuolo;
 
   const fixedRatesUSA = {
-    Savannah: {
-      handlingInOutDrayage: 890,
-      tonWeight: 24,
-    },
-    "New Orleans": {
-      handlingInOutDrayage: 800,
-      drayagePortsOfAmerica: 235,
-      tonWeight: 24,
-    },
-    Houston: {
-      handlingInOutDrayagesChassis: 725,
-      tonWeight: 24,
-    },
+    Savannah: _rates.usa_savannah,
+    "New Orleans": _rates.usa_new_orleans,
+    Houston: _rates.usa_houston,
   };
-
-  const fixedRatesKoper = {
-    thcOrigin: 150.0,
-    stowage: 400.0,
-    preCarriageNiederauer: 500.0,
-    tonWeight: 24,
-  };
-
-  const fixedRatesVerzuolo = {
-    thcOrigin: 200.0,
-    preCarriageToAntwerp: 425.0,
-    lashingAndSecuring: 75.0,
-    stuffingRate: 7.6,
-    tonWeight: 24,
-  };
+  // ───────────────────────────────────────────────────────────────
 
   // Extraire les valeurs uniques
   const origins = [...new Set(currentFreightData.map((item) => item.origin))];

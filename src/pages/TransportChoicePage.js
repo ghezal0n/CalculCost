@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { ShieldCheck } from "lucide-react";
 import "../assets/styles/TransportChoice.css";
+import { isAdmin } from "../auth/authUtils";
 
 const choiceConfig = {
   "fca-mill-truck": "FCA Mill by Truck",
@@ -15,12 +17,6 @@ const choices = [
     key: "fca-mill-truck",
     title: "FCA Mill by Truck",
     description: "Direct delivery from the mill by road transport",
-    // features: [
-    //   "Direct pickup at the mill",
-    //   "Flexible road transport",
-    //   "Optimized lead times",
-    //   "Reduced costs for short distances",
-    // ],
     svgPaths: [
       "M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z",
       "M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0",
@@ -30,12 +26,6 @@ const choices = [
     key: "fca-mill-container",
     title: "FCA Mill in Container",
     description: "Goods packed in container from the mill",
-    // features: [
-    //   "Containerization at the mill",
-    //   "Maximum protection",
-    //   "Logistics optimization",
-    //   "Reduced handling",
-    // ],
     svgPaths: [
       "M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4",
     ],
@@ -44,12 +34,6 @@ const choices = [
     key: "fca-port-truck",
     title: "FCA Port by Truck",
     description: "Delivery to port by road transport",
-    // features: [
-    //   "Direct delivery to port",
-    //   "Flexible scheduling",
-    //   "Timing control",
-    //   "Adaptation to port constraints",
-    // ],
     svgPaths: [
       "M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z",
       "M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0",
@@ -59,12 +43,6 @@ const choices = [
     key: "fca-port-container",
     title: "FCA Port in Container",
     description: "Goods delivered to port in container ready for shipment",
-    // features: [
-    //   "Container ready for export",
-    //   "Maximum port efficiency",
-    //   "Reduced waiting times",
-    //   "Streamlined process",
-    // ],
     svgPaths: [
       "M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4",
     ],
@@ -73,12 +51,6 @@ const choices = [
     key: "fob-container",
     title: "FOB",
     description: "Free On Board delivery",
-    // features: [
-    //   "Container ready for export",
-    //   "Maximum efficiency",
-    //   "Streamlined process",
-    //   "Cost-effective solution",
-    // ],
     svgPaths: [
       "M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4",
     ],
@@ -90,14 +62,11 @@ const TransportChoicePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const adminMode = isAdmin();
+
   const countryId =
     location.state?.countryId ||
     localStorage.getItem("selectedCountryId") ||
-    null;
-
-  const selectedMillName =
-    location.state?.selectedMill?.name ||
-    localStorage.getItem("selectedMillName") ||
     null;
 
   const allowedChoices =
@@ -105,7 +74,6 @@ const TransportChoicePage = () => {
     JSON.parse(localStorage.getItem("allowedChoices") || "null") ||
     null;
 
-  // Sauvegarde des données importantes dans localStorage
   useEffect(() => {
     if (location.state?.countryId) {
       localStorage.setItem("selectedCountryId", location.state.countryId);
@@ -118,36 +86,26 @@ const TransportChoicePage = () => {
     }
   }, [location.state]);
 
-  // filtrage améliorée
   const getFilteredChoices = () => {
-    console.log("countryId:", countryId);
-    console.log("allowedChoices:", allowedChoices);
-
     if (
       countryId === "spain" ||
       countryId === "usa" ||
       countryId === "slovenia" ||
       countryId === "italy"
     ) {
-      console.log("filtrage par pays pour:", countryId);
       return choices.filter(
         (c) => c.key === "fca-port-truck" || c.key === "fob-container"
       );
     }
-
-    // Belgium-Germany-Netherlands
     if (Array.isArray(allowedChoices) && allowedChoices.length > 0) {
-      console.log("allowedChoices:", allowedChoices);
       return choices.filter((c) => allowedChoices.includes(c.key));
     }
-    console.log("tous les choix disponibles");
     return choices;
   };
 
   const filteredChoices = getFilteredChoices();
 
   useEffect(() => {
-    // Animation d'entrée
     const cards = document.querySelectorAll(".choice-card");
     cards.forEach((card, index) => {
       card.style.opacity = "0";
@@ -158,7 +116,7 @@ const TransportChoicePage = () => {
         card.style.transform = "translateY(0)";
       }, index * 150);
     });
-  }, [filteredChoices]); // Relancer l'animation quand filteredChoices change
+  }, [filteredChoices]);
 
   const buildPropositionsForChoice = (choiceKey) => {
     const millProps = [
@@ -197,13 +155,28 @@ const TransportChoicePage = () => {
 
     const propositions = buildPropositionsForChoice(choiceKey);
 
+    // ── ADMIN: go to rates editor instead of calculator ──────────
+    if (adminMode) {
+      navigate("/admin/rates", {
+        state: {
+          countryId,
+          selectedChoice: choiceKey,
+          selectedChoiceLabel: choiceConfig[choiceKey],
+          propositions,
+          allowedChoices,
+        },
+      });
+      return;
+    }
+    // ─────────────────────────────────────────────────────────────
+
     navigate("/calcul", {
       state: {
         countryId,
         selectedChoice: choiceKey,
         selectedChoiceLabel: choiceConfig[choiceKey],
         propositions,
-        allowedChoices, // Transmettre les allowedChoices pour maintenir la cohérence
+        allowedChoices,
       },
     });
   };
@@ -223,15 +196,23 @@ const TransportChoicePage = () => {
               strokeLinejoin="round"
               strokeWidth="2"
               d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-            ></path>
+            />
           </svg>
           <h1>Transport Mode</h1>
+          {/* ── Admin badge ── */}
+          {adminMode && (
+            <span className="admin-mode-badge">
+              <ShieldCheck size={14} />
+              Admin – Edit Rates
+            </span>
+          )}
         </div>
-        <p className="header-subtitle">Select your preferred delivery method</p>
+        <p className="header-subtitle">
+          {adminMode
+            ? "Select a transport mode to edit its fixed rates"
+            : "Select your preferred delivery method"}
+        </p>
         <p className="header-description">
-          {/*           
-          Click on a transport mode to access the calculator directly */}
-
           {countryId && (
             <span className="header-region-description">
               Region:{" "}
@@ -246,10 +227,6 @@ const TransportChoicePage = () => {
                 : "Belgium - Germany - Netherlands"}
             </span>
           )}
-          {/* <p className="header-region-description">
-            Selected factory:{" "}
-            {selectedMillName ? selectedMillName : "No factory selected"}
-          </p> */}
         </p>
       </div>
 
@@ -259,7 +236,7 @@ const TransportChoicePage = () => {
             key={c.key}
             className={`choice-card ${
               selectedChoice === c.key ? "selected" : ""
-            }`}
+            } ${adminMode ? "admin-card-hover" : ""}`}
             data-choice={c.key}
             onClick={() => handleCardClick(c.key)}
           >
@@ -277,6 +254,9 @@ const TransportChoicePage = () => {
               </svg>
             </div>
             <h3 className="choice-title">{c.title}</h3>
+            {adminMode && (
+              <p className="admin-card-hint">Click to edit rates →</p>
+            )}
             <ul className="choice-features"></ul>
           </div>
         ))}

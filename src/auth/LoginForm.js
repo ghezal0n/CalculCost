@@ -4,6 +4,7 @@ import "../assets/images/LogoRoxcel.png";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import axios from "axios";
+import { persistAdminFlag } from "./authUtils";
 
 const LoginForm = ({ onLoginSuccess }) => {
   const [email, setEmail] = useState("");
@@ -11,17 +12,21 @@ const LoginForm = ({ onLoginSuccess }) => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setSuccess("");
+
     if (!email || !password) {
       setError("Please fill in all fields.");
       return;
     }
+
+    setIsLoading(true);
+
     try {
       const response = await axios.post(
         "http://localhost:8080/api/auth/login",
@@ -30,12 +35,25 @@ const LoginForm = ({ onLoginSuccess }) => {
           password,
         }
       );
+
       const token = response.data.token;
       localStorage.setItem("token", token);
+
+      // Persist admin flag decoded from JWT
+      persistAdminFlag(token);
+
+      // Trigger storage event to update navbar state
+      window.dispatchEvent(new Event("storage"));
+
       setSuccess("Login successful!");
-      navigate("/region");
+
+      // Redirect to department page after successful login
+      setTimeout(() => {
+        navigate("/", { replace: true });
+      }, 500);
     } catch (err) {
       setError("Incorrect email or password.");
+      setIsLoading(false);
     }
   };
 
@@ -53,6 +71,7 @@ const LoginForm = ({ onLoginSuccess }) => {
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          disabled={isLoading}
         />
         <div className="password-input-container">
           <input
@@ -63,6 +82,7 @@ const LoginForm = ({ onLoginSuccess }) => {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            disabled={isLoading}
           />
           <div
             className="eye-icon"
@@ -75,9 +95,6 @@ const LoginForm = ({ onLoginSuccess }) => {
           {isLoading ? "Logging in..." : "Login"}
         </button>
       </form>
-      {/* <div className="login-footer">
-        Don’t have an account yet? <Link to="/register">Sign up</Link>.
-      </div> */}
     </div>
   );
 };

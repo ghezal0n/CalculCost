@@ -1,12 +1,30 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { ShieldCheck } from "lucide-react";
 import logoutIcon from "../assets/images/logout.png";
+import { isAdmin } from "../auth/authUtils";
 
 function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userIsAdmin, setUserIsAdmin] = useState(false);
+
+  // Vérifier si l'utilisateur est connecté
+  useEffect(() => {
+    const checkAuth = () => {
+      const token = localStorage.getItem("token");
+      setIsLoggedIn(!!token);
+      setUserIsAdmin(isAdmin());
+    };
+
+    checkAuth();
+    // Re-check on route change (useful after login)
+    window.addEventListener("storage", checkAuth);
+    return () => window.removeEventListener("storage", checkAuth);
+  }, [location.pathname]);
 
   // taille de l'écran
   useEffect(() => {
@@ -38,7 +56,8 @@ function Navbar() {
     };
   }, [isMobileMenuOpen]);
 
-  const shouldHideNavbar = location.state?.hideNavbar || false;
+  const shouldHideNavbar =
+    location.state?.hideNavbar || location.pathname === "/login";
 
   if (shouldHideNavbar) {
     return null;
@@ -52,7 +71,7 @@ function Navbar() {
     "/transport",
     "/calcul",
     "/historique",
-    //"/map",
+    "/admin/rates",
   ];
 
   if (!allowedPaths.includes(location.pathname)) {
@@ -64,22 +83,46 @@ function Navbar() {
     { path: "/region", label: "Region" },
     { path: "/usine", label: "Mill" },
     { path: "/transport", label: "Transport" },
-    { path: "/calcul", label: "Calcul" },
-    { path: "/historique", label: "Historique" },
-    //{ path: "/map", label: "Map" },
+    { path: "/calcul", label: "Calculation" },
+    { path: "/historique", label: "history" },
+    //{ path: "/admin/rates", label: "Tarifs", adminOnly: true },
   ];
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const handleLogin = () => {
+    setIsMobileMenuOpen(false);
+    navigate("/login");
+  };
+
   const handleLogout = () => {
+    // Clear all auth data
+    localStorage.removeItem("token");
+    localStorage.removeItem("isAdmin");
+    localStorage.removeItem("selectedCountryId");
+    localStorage.removeItem("selectedFCAMode");
+    localStorage.removeItem("selectedFCAModeLabel");
+    localStorage.removeItem("selectedMill");
+    localStorage.removeItem("selectedMillName");
+    localStorage.removeItem("allowedChoices");
+    localStorage.removeItem("usinePropositions");
+
+    setIsLoggedIn(false);
+    setUserIsAdmin(false);
     setIsMobileMenuOpen(false);
     navigate("/login", { replace: true });
   };
 
   const handleNavItemClick = (item) => {
-    // Récupérer les données du contexte
+    // Vérifier si l'utilisateur est connecté avant de naviguer
+    if (!isLoggedIn && item.path !== "/") {
+      alert("Please log in to access this page.");
+      navigate("/login");
+      return;
+    }
+
     const countryId =
       location.state?.countryId || localStorage.getItem("selectedCountryId");
     const allowedChoices =
@@ -173,7 +216,6 @@ function Navbar() {
     </svg>
   );
 
-  // Composant SVG pour l'icône logout
   const LogoutIcon = () => (
     <svg
       width="20"
@@ -241,19 +283,30 @@ function Navbar() {
     gap: "1rem",
   };
 
-  const logoutButtonStyles = {
-    display: "flex",
-    alignItems: "center",
-    background: "#dc3545",
+  const loginButtonStyles = {
+    background: "#28a745",
     border: "none",
     color: "white",
     cursor: "pointer",
-    padding: "0.5rem 1rem",
+    padding: "0.5rem 1.25rem",
     borderRadius: "4px",
     fontSize: "0.9rem",
-    fontWeight: "500",
+    fontWeight: "600",
     transition: "all 0.3s",
     minHeight: "36px",
+  };
+
+  const adminBadgeStyles = {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "0.3rem",
+    background: "#dc2626",
+    color: "#fff",
+    fontSize: "0.7rem",
+    fontWeight: "700",
+    letterSpacing: "0.05em",
+    padding: "0.15rem 0.5rem",
+    borderRadius: "999px",
   };
 
   const mobileMenuButtonStyles = {
@@ -327,12 +380,11 @@ function Navbar() {
     borderBottom: "1px solid #495057",
   };
 
-  const mobileLogoutButtonStyles = {
+  const mobileActionButtonStyles = {
     width: "100%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    background: "#dc3545",
     border: "none",
     color: "white",
     cursor: "pointer",
@@ -440,31 +492,54 @@ function Navbar() {
           </ul>
 
           <div style={desktopRightSection}>
-            <span
-              onClick={handleLogout}
-              style={{
-                color: "white",
-                cursor: "pointer",
-                fontSize: "0.9rem",
-                fontWeight: "500",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-              }}
-              onMouseEnter={(e) => (e.target.style.color = "#ffc107")}
-              onMouseLeave={(e) => (e.target.style.color = "white")}
-            >
-              <img
-                src={logoutIcon}
-                alt="Logout"
-                style={{
-                  width: "18px",
-                  height: "18px",
-                  filter: "brightness(0) saturate(100%) invert(100%)",
-                }}
-              />
-              Déconnexion
-            </span>
+            {isLoggedIn ? (
+              <>
+                {userIsAdmin && (
+                  <span style={adminBadgeStyles}>
+                    <ShieldCheck size={12} />
+                    ADMIN
+                  </span>
+                )}
+                <span
+                  onClick={handleLogout}
+                  style={{
+                    color: "white",
+                    cursor: "pointer",
+                    fontSize: "0.9rem",
+                    fontWeight: "500",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                  }}
+                  onMouseEnter={(e) => (e.target.style.color = "#ffc107")}
+                  onMouseLeave={(e) => (e.target.style.color = "white")}
+                >
+                  <img
+                    src={logoutIcon}
+                    alt="Logout"
+                    style={{
+                      width: "18px",
+                      height: "18px",
+                      filter: "brightness(0) saturate(100%) invert(100%)",
+                    }}
+                  />
+                  Log out
+                </span>
+              </>
+            ) : (
+              <button
+                style={loginButtonStyles}
+                onClick={handleLogin}
+                onMouseEnter={(e) =>
+                  (e.target.style.backgroundColor = "#218838")
+                }
+                onMouseLeave={(e) =>
+                  (e.target.style.backgroundColor = "#28a745")
+                }
+              >
+                Log in
+              </button>
+            )}
           </div>
 
           <button
@@ -494,15 +569,25 @@ function Navbar() {
         aria-label="Menu de navigation mobile"
       >
         <div style={mobileMenuHeaderStyles}>
-          <span
-            style={{
-              color: "white",
-              fontWeight: "bold",
-              fontSize: "1.1rem",
-            }}
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "0.3rem" }}
           >
-            Navigation
-          </span>
+            <span
+              style={{
+                color: "white",
+                fontWeight: "bold",
+                fontSize: "1.1rem",
+              }}
+            >
+              Navigation
+            </span>
+            {isLoggedIn && userIsAdmin && (
+              <span style={{ ...adminBadgeStyles, width: "fit-content" }}>
+                <ShieldCheck size={12} />
+                ADMIN
+              </span>
+            )}
+          </div>
           <button
             style={closeButtonStyles}
             onClick={() => setIsMobileMenuOpen(false)}
@@ -540,16 +625,34 @@ function Navbar() {
         </div>
 
         <div style={mobileMenuFooterStyles}>
-          <button
-            style={mobileLogoutButtonStyles}
-            onClick={handleLogout}
-            onMouseEnter={(e) => (e.target.style.backgroundColor = "#c82333")}
-            onMouseLeave={(e) => (e.target.style.backgroundColor = "#dc3545")}
-            aria-label="Se déconnecter"
-          >
-            <LogoutIcon />
-            Déconnexion
-          </button>
+          {isLoggedIn ? (
+            <button
+              style={{
+                ...mobileActionButtonStyles,
+                background: "#dc3545",
+              }}
+              onClick={handleLogout}
+              onMouseEnter={(e) => (e.target.style.backgroundColor = "#c82333")}
+              onMouseLeave={(e) => (e.target.style.backgroundColor = "#dc3545")}
+              aria-label="Log out"
+            >
+              <LogoutIcon />
+              Log out
+            </button>
+          ) : (
+            <button
+              style={{
+                ...mobileActionButtonStyles,
+                background: "#28a745",
+              }}
+              onClick={handleLogin}
+              onMouseEnter={(e) => (e.target.style.backgroundColor = "#218838")}
+              onMouseLeave={(e) => (e.target.style.backgroundColor = "#28a745")}
+              aria-label="Log in"
+            >
+              Log in
+            </button>
+          )}
         </div>
       </div>
     </>

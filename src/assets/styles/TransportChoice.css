@@ -458,4 +458,39 @@ body {
     font-size: 13px;
     margin-bottom: 7px;
   }
+  /* ─────────────────────────────────────────
+   Admin additions for TransportChoice.css
+   Append these rules to your existing
+   TransportChoice.css file.
+   ───────────────────────────────────────── */
+
+  /* Admin badge next to the page title */
+  .admin-mode-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: #dc2626;
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    margin-left: 0.75rem;
+    vertical-align: middle;
+  }
+
+  /* Subtle orange ring on hover when admin selects a card to edit */
+  .choice-card.admin-card-hover:hover {
+    border-color: #f59e0b !important;
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+  }
+
+  /* Small hint text inside each card in admin mode */
+  .admin-card-hint {
+    font-size: 0.75rem;
+    color: #f59e0b;
+    font-weight: 600;
+    margin: 0.25rem 0 0;
+  }
 }
