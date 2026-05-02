@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "https://shipmate-backend-a8h8.onrender.com/api",
+  baseURL: `${process.env.URL}/api`,
 });
 
 axiosInstance.interceptors.request.use((config) => {

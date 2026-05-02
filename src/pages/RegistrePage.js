@@ -14,13 +14,13 @@ const RegisterPage = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:8080/api/auth/register", {
+      await axios.post(`${process.env.URL}/api/auth/register`, {
         email,
         username,
         password,
       });
       setMessage(
-        "Compte créé avec succès. Vous pouvez maintenant vous connecter."
+        "Compte créé avec succès. Vous pouvez maintenant vous connecter.",
       );
       setIsError(false);
     } catch (error) {

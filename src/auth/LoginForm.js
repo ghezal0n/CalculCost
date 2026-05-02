@@ -28,13 +28,10 @@ const LoginForm = ({ onLoginSuccess }) => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post(
-        "http://localhost:8080/api/auth/login",
-        {
-          email,
-          password,
-        }
-      );
+      const response = await axios.post(`${process.env.URL}/api/auth/login`, {
+        email,
+        password,
+      });
 
       const token = response.data.token;
       localStorage.setItem("token", token);
