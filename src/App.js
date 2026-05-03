@@ -15,6 +15,10 @@ function App() {
     document.body.style.padding = "0";
     document.documentElement.style.margin = "0";
     document.documentElement.style.padding = "0";
+    //Réveiller le backend Render au démarrage
+    fetch(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
+      method: "GET",
+    }).catch(() => {});
   }, []);
 
   return (
